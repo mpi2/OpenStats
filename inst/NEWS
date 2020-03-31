@@ -1,0 +1,7 @@
+Initial release 1.0.0 (2020-03-31)
++ Three fully customized implemented frameworks for analysis of phenotypic data, 
+-    Linear mixed model
+-    Fisher's exact test
+-    Reference range plus framework
++ Fully optimized and scalable
++ Robust and reliable to be running on high-throughput phenotypic pipelines

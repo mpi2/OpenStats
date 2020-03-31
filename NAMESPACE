@@ -1,0 +1,58 @@
+import(nlme)
+import(MASS)
+import(methods)
+#import(Hmisc)
+import(jsonlite)
+import(knitr)
+import(AICcmodavg)
+import(rlist)
+
+#import(summarytools)
+
+importFrom("graphics", "abline", "hist", "par", "plot")
+importFrom("stats", "AIC", "aggregate", "as.formula", "complete.cases",
+					 "density", "fisher.test", "formula", "poisson", "predict",
+					 "qqnorm", "resid", "sd", "terms", "xtabs")
+importFrom("stats", "na.omit", "reformulate", "update")
+importFrom("utils", "combn", "head", "tail")
+importFrom("methods", "setClass")
+importFrom("Hmisc","describe")
+importFrom("methods", "is")
+importFrom("methods", "formalArgs")
+importFrom("nlme", "lme","gls","getData","lmeControl","glsControl")
+importFrom("stats", "qqline", "anova")
+importFrom("stats", "coef", "dist", "glm.control", "quantile", "runif",
+               "setNames", "shapiro.test", "update.formula", "var")
+importFrom("stats", "delete.response", "terms.formula", "ks.test")
+importFrom("MASS", "stepAIC","addterm")
+importFrom("stats", "deviance", "extractAIC", "factor.scope", "nobs")
+importFrom("stats", "drop.scope","model.matrix")
+importFrom("stats", "pchisq","relevel")
+importFrom("graphics", "mosaicplot")
+importFrom("car"     , "qqPlot", "densityPlot")
+
+
+S3method(summary   , OpenStatsList)
+S3method(summary   , OpenStatsMM)
+S3method(summary   , OpenStatsRR)
+S3method(summary   , OpenStatsFE)
+S3method(summary   , NULL)
+
+S3method(plot      , OpenStatsList)
+S3method(plot      , OpenStatsMM)
+S3method(plot      , OpenStatsRR)
+S3method(plot      , OpenStatsFE)
+S3method(plot      , NULL)
+
+
+
+
+
+#exportPattern("^[^\\.]")
+export(
+	OpenStatsList      ,
+	OpenStatsAnalysis  ,
+	OpenStatsReport    ,
+ OpenStatsComplementarySplit
+)
+

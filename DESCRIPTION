@@ -1,0 +1,20 @@
+Package: OpenStats
+Type: Package
+Title: A Robust and Scalable Software Package for Reproducible Analysis of High-Throughput Phenotypic Data
+Version: 1.0.0
+Author: Hamed Haseli Mashhadi
+Maintainer: Hamed Haseli Mashhadi <hamedhm@ebi.ac.uk>
+Description: Package contains several methods for statistical analysis of phenotypic data.
+License: GPL (>= 2)
+Imports: nlme, MASS, jsonlite, Hmisc, methods, knitr, AICcmodavg, car, rlist, summarytools, graphics, stats, utils
+Encoding: UTF-8
+LazyData: true
+Repository: CRAN
+RoxygenNote: 6.0.1
+Depends: R (>= 3.6.0.0)
+Suggests: rmarkdown
+BugReports: https://git.io/Jv50e
+URL: https://git.io/JeOVN
+biocViews: StatisticalMethod, BatchEffect, Bayesian 
+Date: 2020-03-31
+VignetteBuilder: knitr

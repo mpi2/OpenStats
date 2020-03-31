@@ -1,0 +1,448 @@
+---
+title: '**OpenStats**: A Robust and Scalable Software Package for Reproducible Analysis of High-Throughput Phenotypic Data'
+author: 
+ name: Hamed Haseli Mashhadi 
+ email: hamedhm@ebi.ac.uk
+date: "`r format(Sys.time(), '%d %B %Y')`"
+package: OpenStats
+output:
+  pdf_document: 
+    number_sections: yes
+    toc: yes
+    toc_depth: 5
+  html_document:
+    highlight: tango
+    number_sections: yes
+    toc: yes
+    toc_depth: 5
+  word_document:
+    toc: yes
+    toc_depth: '5'
+vignette: >
+  \VignetteIndexEntry{OpenStats}
+  \VignetteEncoding{UTF-8}  
+  \VignetteEngine{knitr::rmarkdown}
+---
+
+*OpenStats* is a freely available R package that presents statistical methods and detailed analyses to promote the hard process of identification of abnormal phenotypes. The package incorporates several checks and cleaning on the input data prior to the statistical analysis. For continuous data, Linear Mixed Model with an optional model selection routine is implemented, whilst for categorical data, Fisher's Exact Test is implemented. For cases where the linear mixed model fails, Reference Range Plus method has been employed for a quick, simple analysis of the continuous data. User can perform inspections and diagnostics of the final fitted model by the visualisation tools that come with the software. Furthermore, the user can export/report the outputs in the form of either standard R list or JavaScript Object Notation (JSON). OpenStats has been tested and demonstrated with an application of $2.5M+$ analyses from the Internationa Mouse Phenotyping Consortium (IMPC).
+
+The User's Guide with more details about the statistical analysis is available as part of the
+online documentation from (https://rpubs.com/hamedhm/openstats). Project Github repository including *dev* version of the package is available on (https://git.io/JeOVN).
+
+**OpenStats** can be installed using the standard R package installation routin:
+
+**R code here**
+
+## Building block of the software
+*OpenStats* consists of one input layer and three operational layers:
+-  **(Input layer)** Input data and specifiying model: this includes the input data and an initial model in the form of standard R formula, e.g. $y \sim x+1$.
+-  **(Operational layer 1)** Dataset preprocessing: this includes checking, cleaning and terminology unification procedures and is completed by the function *OpenStatsList* which creates an *OpenStatsList* object.
+-  **(Operational layer 2)** Data analysis: this is managed by the function *OpenStatsAnalysis* and consists of Linear Mixed Model, Fisher's Exact test and Reference Range plus framework implementations. The results are stored in an *OpenStatsMM/FE/RR* object.
+-  **(Operational layer 3)** Report/Export: the exports/reports are managed by the function *OpenStatsReport*. *OpenStats* reports the outputs in the form of either List or JSON objects.
+
+
+
+
+## Data preprocessing
+*OpenStatsList* function performs data processing and creates an *OpenStatsList* object.
+As input, *OpenStatsList* function requires dataset of phenotypic data that can be presented as data frame.
+For instance, it can be dataset stored in csv, tsv or txt file. Data is organised with rows and columns for samples and features respectively. Following shows an example of the input data where rows and columns represent mice and features (mouse id,  treatment group, gender, age of animals in days):
+
+
+
+```{r R_hide002, echo=TRUE, eval=TRUE, results='tex'}
+library(OpenStats)
+###################
+# Data preparation
+###################
+fileCon = system.file("extdata", "test_continuous.csv", 
+                      package = "OpenStats")
+read.csv(fileCon, as.is = TRUE)[60:75, c('external_sample_id'     ,
+                                         'biological_sample_group',
+                                         'sex'                    ,
+                                         'age_in_days')]
+```
+
+
+The main preprocessing tasks performed by the *OpenStatsList* function are:
+
+-  terminology unification,
+-  filtering out undesirable records (when the argument *dataset.clean* is set to TRUE),
+-  imputing missings such as blanks, spaces or user-specified terms with NA,
+-  and checking whether the dataset can be used for the statistical analysis.
+
+
+
+
+We define "terminology unification" as the terminology used to describe data (variables) that are essential for the analysis. *OpenStats* package uses the following nomenclature for the names of columns: "Genotype", the only mandatory variable, "Sex",  "Batch"  "LifeStage" and "Weight". In addition, expected (default) Sex, LifeStage values are "Male/Female" and "Early/Late" respectively. However, the user can define the custome levels by setting *dataset.values.male*, *dataset.values.female*, *dataset.values.early* and *dataset.values.late* in the OpenStatsList function.  Missing value is specified by *dataset.values.missingValue* argument and set to *NA*.
+
+The statistical analysis requires exactly two "Genotype" groups for comparison
+(e.g. wild-type versus knockout). Thus the function *OpenStatsList* requires users to define the reference genotype (mandatory argument *refGenotype* with default value "control") and test genotype (mandatory argument
+*testGenotype*), defaulted to "experimental"). If the *OpenStatsList* function argument *dataset.clean* is set to TRUE then all records with genotype values others than reference or test genotype are filtered out.
+
+All tasks in OpenStats are accompanied by step-by-step reports, error messages, warnings and/or other useful information about the progress of the function. If messages are not desirable, *OpenStatsList* function's argument *debug* can be set to FALSE meaning there will be no messages. 
+
+The chunk of code below demonstrates an example of using *OpenStatsList* when the user sets out-messages to TRUE/FALSE:
+
+```{r R_hide003, results='tex', echo=TRUE, eval=TRUE}
+  #######################################
+  # Default behaviour with messages
+  #######################################
+  library(OpenStats)
+  fileCon = system.file("extdata", "test_continuous.csv",
+                        package = "OpenStats")
+  test_Cont = OpenStatsList(
+    dataset = read.csv(fileCon),
+    testGenotype = 'experimental',
+    refGenotype  = 'control',
+    dataset.colname.genotype  = 'biological_sample_group',
+    dataset.colname.batch     = 'date_of_experiment',
+    dataset.colname.lifestage = NULL,
+    dataset.colname.weight    = 'weight',
+    dataset.colname.sex       = 'sex'
+  )
+  #######################################
+  # Default behaviour without messages
+  #######################################
+  fileCon = system.file("extdata", "test_continuous.csv", 
+                        package = "OpenStats")
+  test_Cont = OpenStatsList(
+    dataset = read.csv(fileCon),
+    testGenotype = 'experimental',
+    refGenotype  = 'control',
+    dataset.colname.genotype  = 'biological_sample_group',
+    dataset.colname.batch     = 'date_of_experiment',
+    dataset.colname.lifestage = NULL,
+    dataset.colname.weight    = 'weight',
+    dataset.colname.sex       = 'sex',
+    debug                     = FALSE
+  )
+  # No output printed
+```
+
+### OpenStatsList Object
+The output of the *OpenStatsList* function is the *OpenStatsList* object that contains a cleaned dataset as well as a copy of the original dataset. *OpenStats* allows **plot** and **summary** of the OpenStatList object. Below is an example of the OpenStatsList function accompanied by the plot and summary:
+
+```{r R_hide005, echo=TRUE, eval=TRUE, results='tex'}
+  library(OpenStats)
+  df = read.csv(system.file("extdata", "test_continuous.csv", 
+                            package = "OpenStats"))
+  OpenStatsList   = OpenStatsList(
+    dataset      = df,
+    testGenotype = 'experimental',
+    refGenotype  = 'control',
+    dataset.colname.batch     = 'date_of_experiment',
+    dataset.colname.genotype  = 'biological_sample_group',
+    dataset.colname.sex       = 'sex',
+    dataset.colname.weight    = 'weight',
+    debug                     = FALSE
+  )
+  plot   (OpenStatsList, vars = c('Sex', 'Genotype', 'data_point'))
+  summary(OpenStatsList,
+          style     = 'grid',
+          varnumbers= FALSE, # See more options ?summarytools::dfSummary
+          graph.col = FALSE, # Do not show the graph column
+          valid.col = FALSE, 
+          vars      = c('Sex', 'Genotype', 'data_point'))
+  
+```
+
+*OpenStatsList* object stores many characteristics of the data, for instance, reference genotype, test genotype, original column names, factor levels etc.
+
+
+
+## Data Analysis
+*OpenStats* package contains three statistical frameworks for the phenodeviants identification:
+
+-  Simple Linear/Linear Mixed Models framework that assumes baseline values of the dependent variable are normally distributed but batch
+(defined as the date of experiment in the IMPC) is the between-group source of variation. 
+-  Reference Range Plus framework identifies the normal variation form a group called *Reference variable* (wild-type animals in the IMPC), classifies dependent
+variable as low, normal or high and compare proportions. This framework recommended for the
+sufficient number of controls (more than 60 records) to correctly identify normal variation.
+-  Fishers Exact Test is a standard framework for categorical data which compares data proportions and calculates
+the percentage change in classification.
+
+
+
+OpenStats's function *OpenStatsAnalysis* works as a hub for the different statistical analysis methods.
+It checks the dependent variable, the data, missings, not proper terms in the model (such as terms that do not exist in the input data) and runs the selected statistical analysis framework and returns modelling\slash
+testing results. All analysis frameworks output a statistical significance measure, effect size measure, model diagnostics, and graphical visualisations.
+
+Here we explain the main bits of the *OpenStatsAnalysis* function:
+
+
+  -  **OpenStatsListObject**: defines the dataset stored in an *OpenStatsList* object.
+  -  **model**: defines the fixed effect model for example, $Response \sim Genotype + Sex$
+  -  **method**: defines which statistical analysis framework to use.
+
+The possible values for the *method* arguments are "MM" which stands for mixed model framework, "FE" to perform Fisher's exact test model and "RR" for Reference Range Plus framework. The semantic naming in the input arguments of the OpenStatsAnalysis function allows natural distinction of the input arguments For example, $MM\_$, $RR\_$ and $FE\_$ prefix represent the arguments that can be set in the corresponging frameworks. Having said that,
+
+
+-  MM\_fixed, MM\_random, MM\_weight refer to the fixed effect terms, random effect term and between group variation 
+-  FE\_formula refers to the model that need to be analysed by Fisher's exacts test(the default $category \sim   Genotype + Sex + LifeStage$ in the IMPC)
+-  RR\_formula, RRrefLevel, RR\_prop refer to the Reference Range plus model (default $data\_point \sim   Genotype + Sex + LifeStage$ in the IMPC). Note that the first term on the right hand side of the model (here $Genotype$) is the *Reference Variable*  and the reference level is defined by "RRrefLevel" (default is set "control" in the IMPC). Finally the natural variation of the reference level to define the so called "NORMAL" category is determined by \emph{RR\_prop} (IMPC $0.95$ that is mutants outside the $.025$ quantile from right/left tails of the distribution are labeles as high/low respectively).
+
+
+The *OpenStatsAnalysis* function performs basic checks to ensure that the data and model match, the model is feasible for the type of the data and reports step-by-step progress of the function. Some of the checks are listed below:
+
+
+-  Mixed Model (MM) frameworks:
+    * *MM\_checks*: A vector of four 1/0 or TRUE/FALSE values such as c(TRUE, TRUE, TRUE, TRUE)[default]. Performing pre-checks on the input model for some known scenarios. The first element of the vector activates checks on the model terms (in MM\_fixed) to have existed in data. The second term removes any single level -factor- from the model (in MM\_fixed). The third term removes the single value (such as a column of constants/no variation) from the -continuous- terms in the model (in MM\_fixed). The Fourth element checks the interaction term to make sure all interactions have some data attached. Caution is needed for this check as it may take longer than usual if the formula in MM\_fixed contains many factors.
+    * Note that OpenStatsAnalysis function always removes duplicated columns in the dataset prior to applying the linear mixed model.
+    * Regardless of the check settings, the OpenStatsAnalysis function always checks for the existence of the "MM\_random" terms (provided "MM\_random" is set) in the input data
+-  Reference Range Plus (RR) and Fisher's exact test (FE) framework's:
+    * *FERR\_FullComparisions* Only applies to the "RR" or "FE" frameworks. A vector of two logical flags, default c(TRUE, FALSE). Setting the first value to TRUE, then all combinations of the effects (all levels of factors in the input model - for example Male\_LifeStage, Male\_Genotype, Male\_Mutant, Male\_control, Female\_control, Female\_Mutant, Female\_LifeStage and so on) will be tested. Otherwise only *main effects* (no sub-levels - for example Sex\_LifeStage [not for instance Male\_LifeStage]) will be tested. Setting the second element of the vector to TRUE (default FALSE) will force the Fisher's Exact test to do all comparisons between different levels of the RESPONSE variable. For example, if the response has three levels such as 1) positive, 2) negative and 3) neutral then the comparison will be between 1\&2, 1\&3, 2\&3 and 1\&2\&3 (obviously the latter is the full table). 
+-  All frameworks
+    * OpenStatsAnalysis allows confidence intervals for all estimates in three frameworks. One can set the confidence level by setting MMFERR\_conf.level to a value in $(0,1)$ interval (default $0.95$).
+
+
+All frameworks are equipped with the step-by-step report of the progress of the function. Warnings, errors and messages are reported to the user. In the situation where the function encounters a critical failure, then the output object contains a slot called $messages$ that reports back the cause of the failure.
+
+## Examples
+In this section, we show some examples of the functionalities in *OpenStats* for the continuous and categorical data. Each section contains the code and different possible scenarios.
+
+### Linear mixed model framework
+The linear mixed model framework applies to continuous data. In this example, data is extracted from the sample data that accompany the software. Here, "Genotype" is the effect of interest. The response is stored in the variable "data\_point" and genotype (Genotype) and body weight (Weight) are covariates. The model selection is left to the default, stepwise, and between-group covariance structure are assumes proportional to the genotype levels (different variation for controls than mutants): 
+
+```{r R_hide010, results='tex', echo=TRUE, eval=TRUE}
+  library(nlme)
+  library(OpenStats)
+	#################
+	# Data preparation
+	#################
+	#################
+	# Continuous data - Creating OpenStatsList object
+	#################
+	fileCon = system.file("extdata", "test_continuous.csv", 
+	                      package = "OpenStats")
+	test_Cont = OpenStatsList(
+		dataset = read.csv(fileCon),
+		testGenotype = 'experimental',
+		refGenotype  = 'control',
+		dataset.colname.genotype  = 'biological_sample_group',
+		dataset.colname.batch     = 'date_of_experiment',
+		dataset.colname.lifestage = NULL,
+		dataset.colname.weight    = 'weight',
+		dataset.colname.sex       = 'sex',
+		debug                     = FALSE
+	)
+	#################
+	# LinearMixed model (MM) framework
+	#################
+	MM_result = OpenStatsAnalysis(
+		OpenStatsList = test_Cont,
+		method   = 'MM',
+		MM_fixed = data_point ~ Genotype  + Weight
+	)
+```
+### Sub-model estimation
+*OpenStats* llows stimateing submodels from an input model. This is called Split model effects in the outputs and it is mainly useful for reporting sex\slash age-specific etc. effects. This is performed by creating submodels of a full model. For instance, for the input fixed effect (\emph{MM\_fixed}) model $response\sim Genotype+Sex+Weight$ a possible submodel is $response \sim Sex+Sex:Genotype + Weight$ that can be used to estimate sex-specific effects for genotype. This model is then estimated under the configuration of the optimal model. One can turn off Split model effects by setting the fourth element of \emph{MM\_optimise} to FALSE.
+
+An alternative to the analytically estimating the sub-models is to break the input data into splits and run the model on the subset of the data. This can be performed by passing the output of OpenStatsAnalysis function, *OpenStatsMM*, to the function, *OpenStatsComplementarySplit*. This function allows the OpenStatsMM object as input and a set of variable names that split happens on. The example below shows the split on "Sex":
+
+```{r R_hide010m2, results='tex', echo=TRUE, eval=TRUE}
+  library(nlme)
+  library(OpenStats)
+	#################
+	# Data preparation
+	#################
+	#################
+	# Continuous data - Creating OpenStatsList object
+	#################
+	fileCon = system.file("extdata", "test_continuous.csv", 
+	                      package = "OpenStats")
+	test_Cont = OpenStatsList(
+		dataset = read.csv(fileCon),
+		testGenotype = 'experimental',
+		refGenotype  = 'control',
+		dataset.colname.genotype  = 'biological_sample_group',
+		dataset.colname.batch     = 'date_of_experiment',
+		dataset.colname.lifestage = NULL,
+		dataset.colname.weight    = 'weight',
+		dataset.colname.sex       = 'sex',
+		debug                     = FALSE
+	)
+	#################
+	# LinearMixed model (MM) framework
+	#################
+	MM_result = OpenStatsAnalysis(
+		OpenStatsList = test_Cont,
+		method        = 'MM',
+		MM_fixed      = data_point ~ Genotype  + Weight,
+		debug         = FALSE
+	)
+	# SplitEffect estimation with respect to the Sex levels
+	Spliteffect = OpenStatsComplementarySplit(object    = MM_result,
+	                                          variables = 'Sex')
+```
+
+### Reference range plus framework
+Reference range plus framework applies to continuous data. In this example, data is extracted from the sample data that accompany the software. Here, "Genotype" is the effect of interest. The response is stored in the variable "data\_point" and genotype (Genotype) and sex (Sex) are covariate. 
+
+```{r R_hide01020, results='tex', echo=TRUE, eval=TRUE}
+  library(nlme)
+  library(OpenStats)
+	#################
+	# Data preparation
+	#################
+	#################
+	# Continuous data - Creating OpenStatsList object
+	#################
+	fileCon = system.file("extdata", "test_continuous.csv", 
+	                      package = "OpenStats")
+	test_Cont = OpenStatsList(
+		dataset = read.csv(fileCon),
+		testGenotype = 'experimental',
+		refGenotype  = 'control',
+		dataset.colname.genotype  = 'biological_sample_group',
+		dataset.colname.batch     = 'date_of_experiment',
+		dataset.colname.lifestage = NULL,
+		dataset.colname.weight    = 'weight',
+		dataset.colname.sex       = 'sex',
+		debug                     = FALSE
+	)
+  #################
+	# Reference range framework
+	#################
+	RR_result = OpenStatsAnalysis(
+		OpenStatsList = test_Cont,
+		method        = 'RR',
+		RR_formula    = data_point ~ Genotype + Sex
+	)
+```
+
+### Fisher's exact test framework
+Fisher's Exact test framework applies to categorical data. In this example, data is extracted from the sample data that accompany the software. Here, Genotype is the effect of interest. The response is stored in the variable *category* and Genotype and Sex are the covariates. 
+
+```{r R_hide0102, results='tex', echo=TRUE, eval=TRUE}
+  library(nlme)
+  library(OpenStats)
+  #################
+	# Categorical data - Creating OpenStatsList object
+	#################
+	fileCat   = system.file("extdata", "test_categorical.csv", 
+	                        package = "OpenStats")
+	test_Cat = OpenStatsList(
+		dataset      = read.csv(fileCat, na.strings = '-'),
+		testGenotype = 'Aff3/Aff3',
+		refGenotype  = '+/+',
+		dataset.colname.genotype  = 'Genotype',
+		dataset.colname.batch     = 'Assay.Date',
+		dataset.colname.lifestage = NULL,
+		dataset.colname.weight    = 'Weight',
+		dataset.colname.sex       = 'Sex',
+		debug                     = FALSE
+	)
+  #################
+	# Fisher's exact test framework
+	#################
+	FE_result = OpenStatsAnalysis(
+		OpenStatsList = test_Cat,
+		method     = "FE",
+		FE_formula =  Thoracic.Processes ~ Genotype + Sex 
+	)
+```
+### OpenStatsAnalysis output object
+OpenStatsAnalysis output consists of three elements namely, *input*, *output* and *extra.* The *input* object encapsulate the input parameters to the function, *output* hold the analysis results and the *extra* keeps some extra processes on the data/model. Below is an example output from the Reference Rage plus framework:
+
+```{r R_hide01021, results='tex', echo=TRUE, eval=TRUE}
+  library(nlme)
+  library(OpenStats)
+	#################
+	# Data preparation
+	#################
+	#################
+	# Continuous data - Creating OpenStatsList object
+	#################
+	fileCon = system.file("extdata", "test_continuous.csv", 
+	                      package = "OpenStats")
+	test_Cont = OpenStatsList(
+		dataset = read.csv(fileCon),
+		testGenotype = 'experimental',
+		refGenotype  = 'control',
+		dataset.colname.genotype  = 'biological_sample_group',
+		dataset.colname.batch     = 'date_of_experiment',
+		dataset.colname.lifestage = NULL,
+		dataset.colname.weight    = 'weight',
+		dataset.colname.sex       = 'sex',
+		debug                     = FALSE
+	)
+  #################
+	# Reference range framework
+	#################
+	RR_result = OpenStatsAnalysis(
+		OpenStatsList = test_Cont,
+		method        = 'RR',
+		RR_formula    = data_point ~ Genotype + Sex,
+		debug         = FALSE
+	)
+	lapply(RR_result,names)
+	#lapply(RR_result$output,names)
+```
+
+
+## Summary and export
+*OpenStats* package stores the results of statistical analyses in the *OpenStatsMM/RR/FE* object.
+The standard *summary* function can be applied to print out a summary table. The function *OpenStatsReport* can be used to create a table of detailed summary in the form of either list or JSON. The following is an example of the summary output of the MM framework. The same function applied to the FE and RR output objects.
+
+```{r R_hide013, results='tex', echo=TRUE, eval=TRUE}
+summary(MM_result)
+```
+
+
+*OpenStatsReport* function was developed for large scale application where automatic implementation is require. Following is the JSON output of the function from an *OpenStatsMM* object (cut to the first 1500 charachters):
+
+```{r R_hide015, results='tex', echo=TRUE, eval=TRUE}
+strtrim(
+	OpenStatsReport(
+		object = MM_result,
+		JSON = TRUE,
+		RemoveNullKeys = TRUE,
+		pretty = TRUE
+	),
+	1500)
+```
+
+
+## Graphics
+Graphics in *OpenStats* are as easy as calling the **plot()** function on a OpenStatsList or the OpenStatsMM/FE/RR object. Calling the plot function on the OpenStatsList object is shown below:
+
+```{r R_hide017, results='tex', echo=TRUE, eval=TRUE}
+library(OpenStats)
+  ###################
+	file = system.file("extdata", "test_continuous.csv", 
+	                   package = "OpenStats")
+  ###################
+  # OpenStatsList object
+  ###################
+  OpenStatsList   = OpenStatsList(
+  	dataset   = read.csv(file),
+  	testGenotype = 'experimental',
+  	refGenotype = 'control',
+  	dataset.colname.batch = 'date_of_experiment',
+  	dataset.colname.genotype = 'biological_sample_group',
+  	dataset.colname.sex = 'sex',
+  	dataset.colname.weight = 'weight',
+  	debug = FALSE
+  )
+	plot   (OpenStatsList)
+	summary(
+	  OpenStatsList,
+	  style     = 'grid',
+	  varnumbers = FALSE, 	  # See more options ?summarytools::dfSummary
+	  graph.col = FALSE,  	  # Do not show the graph column
+	  valid.col = FALSE
+	)
+```
+
+
+There are also graphics for the OpenStatsMM/FE/RR. Below shows an example for the OpenStatsMM output:
+
+```{r R_hide018, results='tex', echo=TRUE, eval=TRUE}
+	plot(MM_result, col = 2)
+```
+
+### Session information
+```{r R_hide0175, results='tex', echo=TRUE, eval=TRUE}
+ sessionInfo()
+```
