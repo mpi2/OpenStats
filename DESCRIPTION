@@ -13,8 +13,8 @@ Repository: CRAN
 RoxygenNote: 6.0.1
 Depends: R (>= 3.6.0.0)
 Suggests: rmarkdown
-BugReports: https://git.io/Jv50e
-URL: https://git.io/JeOVN
+BugReports: https://git.io/Jv5wg
+URL: https://git.io/Jv5w0
 biocViews: StatisticalMethod, BatchEffect, Bayesian 
 Date: 2020-03-31
 VignetteBuilder: knitr
