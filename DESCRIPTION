@@ -11,7 +11,7 @@ Encoding: UTF-8
 LazyData: true
 Repository: CRAN
 RoxygenNote: 6.0.1
-Depends: R (>= 4.0.0)
+Depends: R (>= 3.6.0)
 BugReports: https://git.io/Jv5wg
 URL: https://git.io/Jv5w0
 biocViews: StatisticalMethod, BatchEffect, Bayesian 
