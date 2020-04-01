@@ -4,7 +4,7 @@ Title: A Robust and Scalable Software Package for Reproducible Analysis of High-
 Version: 1.0.0
 Author: Hamed Haseli Mashhadi
 Maintainer: Hamed Haseli Mashhadi <hamedhm@ebi.ac.uk>
-Description: Package contains several methods for statistical analysis of phenotypic data.
+Description: Package contains several methods for statistical analysis of phenotype to genotype association.
 License: GPL (>= 2)
 Imports: nlme, MASS, jsonlite, Hmisc, methods, knitr, AICcmodavg, car, rlist, summarytools, graphics, stats, utils
 Encoding: UTF-8
