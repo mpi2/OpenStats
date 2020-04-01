@@ -1,17 +1,15 @@
 ---
 title: '**OpenStats**: A Robust and Scalable Software Package for Reproducible Analysis of High-Throughput Phenotypic Data'
-author: 
- name: Hamed Haseli Mashhadi 
- email: hamedhm@ebi.ac.uk
+author: 'Hamed Haseli Mashhadi (hamedhm@ebi.ac.uk)'
 date: "`r format(Sys.time(), '%d %B %Y')`"
 package: OpenStats
 output:
-  html_document:
-    highlight: tango
+  pdf_document: 
     number_sections: yes
     toc: yes
     toc_depth: 5
-  pdf_document: 
+  html_document:
+    highlight: tango
     number_sections: yes
     toc: yes
     toc_depth: 5
@@ -19,9 +17,9 @@ output:
     toc: yes
     toc_depth: '5'
 vignette: >
-  \VignetteIndexEntry{OpenStats}
-  \VignetteEncoding{UTF-8}  
-  \VignetteEngine{knitr::rmarkdown}
+  %\VignetteIndexEntry{OpenStats}
+  %\VignetteEncoding{UTF-8}  
+  %\VignetteEngine{knitr::rmarkdown}
 ---
 
 *OpenStats* is a freely available R package that presents statistical methods and detailed analyses to promote the hard process of identification of abnormal phenotypes. The package incorporates several checks and cleaning on the input data prior to the statistical analysis. For continuous data, Linear Mixed Model with an optional model selection routine is implemented, whilst for categorical data, Fisher's Exact Test is implemented. For cases where the linear mixed model fails, Reference Range Plus method has been employed for a quick, simple analysis of the continuous data. User can perform inspections and diagnostics of the final fitted model by the visualisation tools that come with the software. Furthermore, the user can export/report the outputs in the form of either standard R list or JavaScript Object Notation (JSON). OpenStats has been tested and demonstrated with an application of $2.5M+$ analyses from the Internationa Mouse Phenotyping Consortium (IMPC).

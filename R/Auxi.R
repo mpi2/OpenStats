@@ -79,7 +79,7 @@ Matrix2List = function(x, ...) {
 	if (is.null(x))
 		return(NULL)
 	
-	if (length(x) == 1 || class(x) == 'numeric') {
+	if (length(x) == 1 || is(x, 'numeric')) {
 		return(as.list(x))
 	}
 	
