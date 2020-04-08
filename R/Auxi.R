@@ -1055,7 +1055,7 @@ SplitEffect = 	function(finalformula     ,
 					newModel = update(
 						reformulate(
 							response = depVariable,
-							termlabels = c(#arg              ,
+							termlabels = c(
 								paste(
 									mandatoryVar   ,
 									arg            ,
