@@ -160,14 +160,14 @@ M.opt = function(object = NULL            ,
 		message0('\tThe direction of the optimisation (backward, forward, both): ', direction)
 		message0('\tOptimising the model ... ')
 		F.Model = tryCatch(
+			# stepAIC must have ML fit as the input
+			# BIC/AIC is replaced with AICc then this parameter (k) does not work
 			expr = stepAIC0(
-				# stepAIC must have ML fit as the input
 				REML2ML(I.Model)                  ,
 				trace     = trace                 ,
 				direction = direction             ,
 				scope     = list(lower = lowerCorrected) ,
 				na.action = na.omit                      ,
-				# BIC/AIC is replaced with AICc then this parameter (k) does not work
 				k = log(n)
 			),
 			warning = function(war) {

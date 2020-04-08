@@ -22,7 +22,6 @@ OpenStatsReportCat =	function(object)
 	DSsize            = SummaryStats(
 		x = x,
 		formula = object$input$formula,
-		#label = 'Summary statistics',
 		lower = TRUE,
 		drop = TRUE,
 		sep = '_'

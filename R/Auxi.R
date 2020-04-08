@@ -1047,7 +1047,6 @@ SplitEffect = 	function(finalformula     ,
 				arg = as.vector(argComb[, j])
 				if (arg %in% dname &&
 						!is.numeric(data[, arg]) &&
-						# model = finalformula
 						termInTheModel(model = fullModelFormula, term = arg)) {
 					message0(counter,
 									 '. Split on ',

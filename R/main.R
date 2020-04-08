@@ -1,6 +1,5 @@
 OpenStatsAnalysis = function(OpenStatsListObject   = NULL          ,
 														 method         = NULL                 ,
-														 ### MM
 														 MM_fixed = TypicalModel(
 														 	depVariable = 'data_point'           ,
 														 	withWeight = MM_BodyWeightIncluded   ,
@@ -40,7 +39,6 @@ OpenStatsAnalysis = function(OpenStatsListObject   = NULL          ,
 				OpenStatsAnalysis0(
 					OpenStatsListObject = OpenStatsListObject ,
 					method = method                           ,
-					#### MM    
 					MM_fixed = MM_fixed                       ,
 					MM_random = MM_random                     ,
 					MM_lower = MM_lower                       ,
@@ -48,14 +46,12 @@ OpenStatsAnalysis = function(OpenStatsListObject   = NULL          ,
 					MM_direction = MM_direction               ,
 					MM_checks   = MM_checks                   ,
 					MM_optimise = MM_optimise                 ,
-					#### FE & RR        
 					FE_formula = FE_formula                   ,
 					RR_formula = RR_formula                   ,
 					RR_prop = RR_prop                         ,
 					RRrefLevel = RRrefLevel                   ,
 					FERR_rep = FERR_rep                       ,
 					FERR_FullComparisions = FERR_FullComparisions ,
-					####
 					debug = debug                                 ,
 					MMFERR_conf.level = MMFERR_conf.level         ,
 					...
@@ -85,7 +81,6 @@ OpenStatsAnalysis = function(OpenStatsListObject   = NULL          ,
 
 OpenStatsAnalysis0 = function(OpenStatsListObject = NULL       ,
 															method                           ,
-															#### MM          
 															MM_fixed                         ,
 															MM_random                        ,
 															MM_lower                         ,
@@ -93,16 +88,13 @@ OpenStatsAnalysis0 = function(OpenStatsListObject = NULL       ,
 															MM_direction = 'both'            ,
 															MM_checks                        ,
 															MM_optimise                      ,
-															##### FE or RR          
 															FE_formula                       ,
 															RR_formula                       ,
 															RR_prop                          ,
 															RRrefLevel                       ,
 															FERR_rep                         ,
 															FERR_FullComparisions            ,
-															#####
 															MMFERR_conf.level = 0.95         ,
-															##### Others       
 															debug = TRUE                     ,
 															...) {
 	message0('OpenStats loaded.')
@@ -190,7 +182,6 @@ OpenStatsAnalysis0 = function(OpenStatsListObject = NULL       ,
 		output = RRrunner(
 			object  = OpenStatsListObject                                               ,
 			formula = MoveResponseToRightOfTheFormula(RR_formula)                       ,
-			#expandDottedFormula(formula = RR_formula, data = OpenStatsListObject@datasetPL) ,
 			rep = FERR_rep                                                              ,
 			method = 'RR'                                                               ,
 			RRprop = RR_prop                                                            ,

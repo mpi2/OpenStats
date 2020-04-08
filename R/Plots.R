@@ -148,8 +148,6 @@ plot.OpenStatsMM = function (x                        ,
 		xlab = 'Fitted values'                              ,
 		ylab = 'Residuals'                                  ,
 		main = main                                         ,
-		#ellipse = TRUE                                     ,
-		#reset.par = FALSE                                  ,
 		...
 	)
 	abline(h = 0, lwd = 3, lty = 2)
