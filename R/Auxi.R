@@ -273,9 +273,9 @@ FeasibleTermsInContFormula = function(formula, data) {
 		stop()
 	}
 	Allvars = all_vars0(formula)[all_vars0(formula) %in% names(data)]
-	isCat = !sapply(data[, Allvars, drop = FALSE], is.numeric)
+	isCat = !is.continuous(data[, Allvars, drop = FALSE])
 	vars  = Allvars[isCat]
-	lvars = length(vars)#min(length(vars), sapply(strsplit(formulaTerms(formula = formula), split = ':'), length), na.rm = TRUE)
+	lvars = length(vars)
 	names = r = NULL
 	if (getResponseFromFormula(formula = formula) %in% vars) {
 		message0('\t Response is included in the checks ....')
@@ -563,7 +563,8 @@ applyFormulaToData = function(formula = NULL, data, add = FALSE) {
 			sep = "+",
 			quiet = TRUE
 		))
-	m <- sapply(nms, function(x)
+	
+	m = sapply(nms, function(x)
 		eval(parse(text = x), data))
 	if (!is.null(m) && add)
 		m = cbind(data, m)
@@ -677,7 +678,7 @@ eff.size = function(object,
 			}
 		)
 	if (!is.null(NModel)) {
-		CoefEffSizes = sapply(data[, effOfInd, drop = FALSE], FUN = is.numeric)
+		CoefEffSizes = is.continuous(data[, effOfInd, drop = FALSE])
 		PerChange = percentageChangeCont(
 			model    = NModel    ,
 			data     = data      ,
@@ -732,7 +733,9 @@ ConvDf2Flat = function(dframe,
 											 chend = ';') {
 	out = apply(as.data.frame(dframe), 1, function(x) {
 		if (length(x) > 2) {
-			paste(paste(paste(x[1:(length(x) - 1)], collapse = ch1), trimws(x[length(x)]), sep  = ch2), collapse = chend)
+			paste(paste(paste(x[seq_len(length(x) - 1)], collapse = ch1),
+									trimws(x[length(x)]), sep  = ch2),
+						collapse = chend)
 		} else if (length(x) == 2) {
 			paste(paste(x[1], ch2, x[2]), collapse = chend)
 		} else{
@@ -864,9 +867,9 @@ RemoveDuplicatedColumnsFromDfandTrimWhiteSpace = function(x, formula = NULL, tri
 						 pasteComma(names(x)[colVars],
 						 					 truncate = FALSE))
 		
-		#numCols = sapply(subX, is.numeric)
-		#ConCols = subX[,  numCols, drop = FALSE]
-		#CatCols = subX[, !numCols, drop = FALSE]
+		# numCols = is.continuous(subX)
+		# ConCols = subX[,  numCols, drop = FALSE]
+		# CatCols = subX[, !numCols, drop = FALSE]
 		dcols   = duplicated(lapply(subX, summary0))
 		if (any(dcols)) {
 			message0(
@@ -1027,7 +1030,7 @@ SplitEffect = 	function(finalformula     ,
 		message0 ('Nothing to split on ...')
 		return(NULL)
 	}
-	isCat    = !sapply(data[, Allargs, drop = FALSE], is.numeric)
+	isCat    = !is.continuous(data[, Allargs, drop = FALSE])
 	args     = Allargs[isCat]
 	argsCon  = if (length(Allargs[!isCat]) > 0) {
 		Allargs[!isCat]
@@ -1115,11 +1118,12 @@ SplitEffect = 	function(finalformula     ,
 
 dim0 <- function(...) {
 	args <- list(...)
-	sapply(args , function(x) {
+	r = lapply(args , function(x) {
 		if (is.null(dim(x)))
 			return(length(x))
 		dim(x)
 	})
+	unlist(r)
 }
 
 printformula = function(formula, message = TRUE) {
@@ -1460,7 +1464,7 @@ AllTables = function(dframe        = NULL,
 		# Which sublists are sublevels?
 		message0('\tFinalising the tables ....')
 		k = unlist(lapply(l3, function(x) {
-			all(sapply(x, is.list))
+			all(vapply(x, is.list, is.logical(1)))
 		}), recursive = FALSE)
 		f = function(l) {
 			names(l) = NULL
@@ -1935,7 +1939,7 @@ CombineLevels = function(...,
 	if (length(x) < 1)
 		return(x)
 	pm = t(permn(n = length(x), r = len))
-	r = sapply(seq_len(ncol(pm)), function(i) {
+	r = lapply(seq_len(ncol(pm)), function(i) {
 		xx  = pm[, i]
 		nxx = length(xx)
 		if (nxx < 1)
@@ -2255,7 +2259,7 @@ RRDiscretizedEngine = function(data,
 	vars  = names(data) %in% all.vars(formula)
 	df    = data[, vars, drop = FALSE]
 	df    = trimColsInDf(df = df)
-	cat   = !sapply(df[, all.vars(formula)], is.numeric)
+	cat   = !is.continuous(df[, all.vars(formula), drop = FALSE])
 	extra = all.vars(formula)[cat &
 															!all.vars(formula) %in% c(depVar, lower)]
 	lextra = length(extra)
@@ -2387,9 +2391,9 @@ columnChecks0 = function(dataset,
 		presence <- FALSE
 	}
 	else {
-		columnOfInterest <- na.omit(dataset[, c(columnName)])
+		columnOfInterest <- na.omit(dataset[, c(columnName), drop = FALSE])
 		
-		if (all(sapply(columnOfInterest, is.numeric))) {
+		if (all(is.continuous(columnOfInterest))) {
 			numeric <- TRUE
 		}
 		
@@ -2617,7 +2621,7 @@ expandDottedFormula = function(formula, data) {
 }
 
 removeSingleLevelFactors = function(formula, data) {
-	cat    = all_vars0(formula)[!sapply(data[, all_vars0(formula)], is.numeric)]
+	cat    = all_vars0(formula)[!is.continuous(data[, all_vars0(formula), drop = FALSE])]
 	if (length(cat)) {
 		FactsThatMustBeRemoved = cat[lapply(data[, cat, drop = FALSE], function(x) {
 			length(unique(na.omit(x)))
@@ -2644,7 +2648,7 @@ removeSingleLevelFactors = function(formula, data) {
 }
 
 removeSingleValueContinuousVariables = function(formula, data) {
-	cont    = all_vars0(formula)[sapply(data[, all_vars0(formula)], is.numeric)]
+	cont    = all_vars0(formula)[is.continuous(data[, all_vars0(formula), drop = FALSE])]
 	if (length(cont)) {
 		VarsThatMustBeRemoved = cont[lapply(data[, cont, drop = FALSE], function(x) {
 			length(unique(na.omit(x)))
@@ -2885,7 +2889,7 @@ SummaryStats = function(x,
 	if (any(dim(x) == 0))
 		return('empty dataset')
 	
-	cat    = all_vars0(formula)[!sapply(x[, all_vars0(formula)], is.numeric)]
+	cat    = all_vars0(formula)[!is.continuous(x[, all_vars0(formula), drop = FALSE])]
 	if (length(cat) > 0)
 		lvls   = interaction(x[, cat], sep = sep, drop = drop)
 	else
@@ -3197,9 +3201,7 @@ QuyalityTests = function(object,
 	r = resid(object)
 	d = getData(object)
 	levels = levels[levels %in% names(d)]
-	levels = levels[sapply(levels, function(lvs) {
-		!is.numeric(d[, lvs])
-	})]
+	levels = levels[!is.continuous(d[, levels, drop = FALSE])]
 	counter = 1
 	flst    = NULL
 	if (length(levels) > 0) {
@@ -3252,14 +3254,9 @@ AllEffSizes = function(object, depVariable, effOfInd, data) {
 	lst       = flst = olst = NULL
 	data      = NormaliseDataFrame(data)
 	effOfInd  = effOfInd[effOfInd %in% names(data)]
-	cats      = effOfInd[sapply(
-		effOfInd,
-		FUN = function(cl) {
-			!is.numeric(data[, cl])
-		}
-	)]
 	counter1 = counter2  = 1
 	if (!is.null(effOfInd) && length(effOfInd)) {
+		cats      = effOfInd[!is.continuous(data[, effOfInd, drop = FALSE])]
 		for (eff in effOfInd) {
 			message0('\tLevel:', pasteComma(unlist(eff)))
 			# 1. Main effect
@@ -4049,5 +4046,17 @@ FormatPvalueClassificationTag = function(x, decimals = 4) {
 					 	scientific = FALSE
 					 ))
 	}
+	return(r)
+}
+
+is.continuous = function(x) {
+	r = vapply(x, is.numeric, is.logical(1))
+	return(r)
+}
+
+totalListElements = function(x) {
+	if (is.null(x))
+		return(0)
+	r = sum(unlist(lapply(x, length)))
 	return(r)
 }

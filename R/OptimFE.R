@@ -54,7 +54,7 @@ crunner = function(object              ,
 	if (trimWC)
 		data = trimColsInDf(data[, allTerms, drop = FALSE])
 	lComplete   = NULL
-	for (indx in 1:ifelse(fullComparisions, pmax(1, length(allTerms) - 1), 1)) {
+	for (indx in seq_len(ifelse(fullComparisions, pmax(1, length(allTerms) - 1), 1))) {
 		depVariable = allTerms[indx]
 		vars        = allTerms[-c(seq_len(indx))]
 		l           = lcomb = names = alTbls = NULL
@@ -146,7 +146,7 @@ crunner = function(object              ,
 					 length(lComplete),
 					 ': ',
 					 pasteComma(names(lComplete),replaceNullby='-'))
-	message0('\tTotal tests =  ', sum(unlist(sapply(lComplete, length))))
+	message0('\tTotal tests =  ', totalListElements(lComplete))
 	message0('FE framework ',
 					 noteToFinish,
 					 ' executed in ',
