@@ -1,6 +1,6 @@
 \name{OpenStatsComplementarySplit}
 \alias{OpenStatsComplementarySplit}
-%- Also NEED an '\alias' for EACH other topic documented here.
+
 \title{
 Method "OpenStatsComplementarySplit" 
 }
@@ -70,7 +70,5 @@ Hamed Haseli Mashhadi <hamedhm@ebi.ac.uk>
 	####################################################################
 	output = OpenStatsComplementarySplit(object = MM_result, variables = 'Sex')  
 }
-% Add one or more standard keywords, see file 'KEYWORDS' in the
-% R documentation directory.
-\keyword{ ~OpenStats }% use one of  RShowDoc("KEYWORDS")
-\keyword{ ~SplitEffect }% __ONLY ONE__ keyword per line
+\keyword{ ~OpenStats }
+\keyword{ ~SplitEffect }

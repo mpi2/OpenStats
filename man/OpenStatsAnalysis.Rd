@@ -1,6 +1,6 @@
 \name{OpenStatsAnalysis}
 \alias{OpenStatsAnalysis}
-%- Also NEED an '\alias' for EACH other topic documented here.
+
 \title{
 Method "OpenStatsAnalysis"
 }
@@ -57,7 +57,7 @@ OpenStatsAnalysis(
 	 An instance of the 'OpenStatsList' or 'PhenList' (former from the `PhenStat` package) class; mandatory argument.
 }
   \item{method}{
-		A character string ("MM", "FE" or "RR") defining the method to use for model building.
+		Must be specified by the user. A character string ("MM", "FE" or "RR") defining the method to use for model building.
 }
   \item{MM_fixed}{
   Only applies to the "MM" framework. A formula that specifies the fixed effect in the linear mix model. The default is data_point~Genotype+Sex+LifeStage +/- BodyWeight. Note that the algorithm checks and removes the formula terms that do not exist in data. 

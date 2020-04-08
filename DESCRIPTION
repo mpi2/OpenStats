@@ -8,12 +8,9 @@ Description: Package contains several methods for statistical analysis of phenot
 License: GPL (>= 2)
 Imports: nlme, MASS, jsonlite, Hmisc, methods, knitr, AICcmodavg, car, rlist, summarytools, graphics, stats, utils
 Encoding: UTF-8
-LazyData: true
-Repository: CRAN
 RoxygenNote: 6.0.1
 BugReports: https://git.io/Jv5wg
 URL: https://git.io/Jv5w0
 biocViews: StatisticalMethod, BatchEffect, Bayesian 
-Date: 2020-03-31
 Suggests: rmarkdown
 VignetteBuilder: knitr

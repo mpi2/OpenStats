@@ -1,13 +1,10 @@
 import(nlme)
 import(MASS)
 import(methods)
-#import(Hmisc)
 import(jsonlite)
 import(knitr)
 import(AICcmodavg)
 import(rlist)
-
-#import(summarytools)
 
 importFrom("graphics", "abline", "hist", "par", "plot")
 importFrom("stats", "AIC", "aggregate", "as.formula", "complete.cases",
@@ -31,7 +28,6 @@ importFrom("stats", "pchisq","relevel")
 importFrom("graphics", "mosaicplot")
 importFrom("car"     , "qqPlot", "densityPlot")
 
-
 S3method(summary   , OpenStatsList)
 S3method(summary   , OpenStatsMM)
 S3method(summary   , OpenStatsRR)
@@ -43,16 +39,11 @@ S3method(plot      , OpenStatsMM)
 S3method(plot      , OpenStatsRR)
 S3method(plot      , OpenStatsFE)
 S3method(plot      , NULL)
-
-
-
-
-
-#exportPattern("^[^\\.]")
+ 
 export(
 	OpenStatsList      ,
 	OpenStatsAnalysis  ,
 	OpenStatsReport    ,
- OpenStatsComplementarySplit
+  OpenStatsComplementarySplit
 )
 

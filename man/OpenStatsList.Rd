@@ -1,6 +1,6 @@
 \name{OpenStatsList}
 \alias{OpenStatsList}
-%- Also NEED an '\alias' for EACH other topic documented here.
+
 \title{
 Method "OpenStatsList"
 }
@@ -31,7 +31,7 @@ OpenStatsList(
 	debug                       = TRUE
 )
 }
-%- maybe also 'usage' for other objects documented here.
+
 \arguments{
   \item{dataset}{
   'mandatory argument'. data frame created from file or from another source
@@ -114,5 +114,5 @@ Hamed Haseli Mashhadi <hamedhm@ebi.ac.uk>
   # str(OpenStatsList@datasetPL)
 }
 
-\keyword{ OpenStatsList }% use one of  RShowDoc("KEYWORDS")
-\keyword{ OpenStatsAnalysis }% __ONLY ONE__ keyword per line
+\keyword{ OpenStatsList }
+\keyword{ OpenStatsAnalysis }

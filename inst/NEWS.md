@@ -1,4 +1,8 @@
-Initial release 1.0.0 (2020-03-31)
+Changes in version 1.0.0:
++ bug fixed and improvements in speed by replacing sapply with vapply
+
+Changes in version 0.0.1:
+
 + Three fully customized implemented frameworks for analysis of phenotypic data, 
 -    Linear mixed model
 -    Fisher's exact test

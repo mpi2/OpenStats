@@ -46,7 +46,6 @@ Hamed Haseli Mashhadi <hamedhm@ebi.ac.uk>
 }
 \examples{
 	\dontrun{
-		library(OpenStats)
 		file = system.file("extdata", "test_continuous.csv", package = "OpenStats")
 		####################################################################
 		# PhenListObject
