@@ -137,7 +137,6 @@ Hamed Haseli Mashhadi <hamedhm@ebi.ac.uk>
 \code{\link{OpenStatsList}}, \code{\link{plot}}, \code{\link{summary}}
 }
 \examples{
-	library(nlme)
 	####################################################################
 	# 1 Data preparation
 	####################################################################

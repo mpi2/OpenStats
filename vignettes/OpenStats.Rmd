@@ -203,7 +203,6 @@ In this section, we show some examples of the functionalities in *OpenStats* for
 The linear mixed model framework applies to continuous data. In this example, data is extracted from the sample data that accompany the software. Here, "Genotype" is the effect of interest. The response is stored in the variable "data\_point" and genotype (Genotype) and body weight (Weight) are covariates. The model selection is left to the default, stepwise, and between-group covariance structure are assumes proportional to the genotype levels (different variation for controls than mutants): 
 
 ```{r R_hide010, results='tex', echo=TRUE, eval=TRUE}
-  library(nlme)
   library(OpenStats)
 	#################
 	# Data preparation
@@ -239,7 +238,6 @@ The linear mixed model framework applies to continuous data. In this example, da
 An alternative to the analytically estimating the sub-models is to break the input data into splits and run the model on the subset of the data. This can be performed by passing the output of OpenStatsAnalysis function, *OpenStatsMM*, to the function, *OpenStatsComplementarySplit*. This function allows the OpenStatsMM object as input and a set of variable names that split happens on. The example below shows the split on "Sex":
 
 ```{r R_hide010m2, results='tex', echo=TRUE, eval=TRUE}
-  library(nlme)
   library(OpenStats)
 	#################
 	# Data preparation
@@ -278,7 +276,6 @@ An alternative to the analytically estimating the sub-models is to break the inp
 Reference range plus framework applies to continuous data. In this example, data is extracted from the sample data that accompany the software. Here, "Genotype" is the effect of interest. The response is stored in the variable "data\_point" and genotype (Genotype) and sex (Sex) are covariate. 
 
 ```{r R_hide01020, results='tex', echo=TRUE, eval=TRUE}
-  library(nlme)
   library(OpenStats)
 	#################
 	# Data preparation
@@ -313,7 +310,6 @@ Reference range plus framework applies to continuous data. In this example, data
 Fisher's Exact test framework applies to categorical data. In this example, data is extracted from the sample data that accompany the software. Here, Genotype is the effect of interest. The response is stored in the variable *category* and Genotype and Sex are the covariates. 
 
 ```{r R_hide0102, results='tex', echo=TRUE, eval=TRUE}
-  library(nlme)
   library(OpenStats)
   #################
 	# Categorical data - Creating OpenStatsList object
@@ -344,7 +340,6 @@ Fisher's Exact test framework applies to categorical data. In this example, data
 OpenStatsAnalysis output consists of three elements namely, *input*, *output* and *extra.* The *input* object encapsulate the input parameters to the function, *output* hold the analysis results and the *extra* keeps some extra processes on the data/model. Below is an example output from the Reference Rage plus framework:
 
 ```{r R_hide01021, results='tex', echo=TRUE, eval=TRUE}
-  library(nlme)
   library(OpenStats)
 	#################
 	# Data preparation

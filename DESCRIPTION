@@ -6,7 +6,8 @@ Author: Hamed Haseli Mashhadi
 Maintainer: Hamed Haseli Mashhadi <hamedhm@ebi.ac.uk>
 Description: Package contains several methods for statistical analysis of phenotype to genotype association.
 License: GPL (>= 2)
-Imports: nlme, MASS, jsonlite, Hmisc, methods, knitr, AICcmodavg, car, rlist, summarytools, graphics, stats, utils
+Imports: MASS, jsonlite, Hmisc, methods, knitr, AICcmodavg, car, rlist, summarytools, graphics, stats, utils
+Depends: nlme
 Encoding: UTF-8
 RoxygenNote: 6.0.1
 BugReports: https://git.io/Jv5wg

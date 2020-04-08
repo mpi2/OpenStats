@@ -39,7 +39,6 @@ Hamed Haseli Mashhadi <hamedhm@ebi.ac.uk>
 \code{\link{OpenStatsAnalysis}}, \code{\link{plot}}, \code{\link{summary}}
 }
 \examples{
-  library(nlme)
 	####################################################################
 	# Data preparation
 	# - Continuous data - Creating OpenStatsList object
