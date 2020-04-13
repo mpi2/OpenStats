@@ -17,10 +17,11 @@ plotFERR = function(x, l1, l2, main, ...) {
 # Plot RR
 ###############################################
 plot.OpenStatsRR = function(x,
-																 main = 'Mosaic plot',
-																 ask = FALSE         ,
-																 mfrow = c(2, 2)     ,
-																 ...) {
+														main = 'Mosaic plot',
+														ask = FALSE         ,
+														mfrow = c(2, 2)     ,
+														...) {
+	
 	if (!is.null(x$messages) || is.null(x)) {
 		message0('Due to error(s), no plot available')
 		message0(x$messages)
@@ -70,10 +71,11 @@ plot.OpenStatsRR = function(x,
 # Plot FE
 ###############################################
 plot.OpenStatsFE = function(x,
-																 main = 'Mosaic plot',
-																 ask = FALSE         ,
-																 mfrow = c(2, 2)     ,
-																 ...) {
+														main = 'Mosaic plot',
+														ask = FALSE         ,
+														mfrow = c(2, 2)     ,
+														...) {
+	
 	if (!is.null(x$messages) || is.null(x)) {
 		message0('Due to error(s), no plot available')
 		message0(x$messages)
@@ -118,11 +120,12 @@ plot.OpenStatsFE = function(x,
 ###############################################
 # Plot MM
 ###############################################
-plot.OpenStatsMM = function (x                        ,
-																	main = 'Final Model',
-																	ask = FALSE         ,
-																	mfrow = c(2, 2)     ,
-																	...) {
+plot.OpenStatsMM = function (x                   ,
+														 main = 'Final Model',
+														 ask = FALSE         ,
+														 mfrow = c(2, 2)     ,
+														 ...) {
+	
 	requireNamespace("car")
 	fm        = x$output$Final.Model
 	formula   = formula(fm)
@@ -163,7 +166,7 @@ plot.OpenStatsMM = function (x                        ,
 				round(residShapiroTest$'P-value', 8) 
 			) 
 		)                                                   ,
-		main = paste0(main, ': Density of the residuals')   ,
+		main = paste0(MainTitlePlusColon(main), 'Density of the residuals')   ,
 		rug  = FALSE                                        ,
 		method = 'kernel'                                    ,
 		...
@@ -171,7 +174,7 @@ plot.OpenStatsMM = function (x                        ,
 	qqPlot(
 		as.vector(residR)                                   ,
 		ylab = 'Residuals'                                  ,
-		main = paste0(main, ': Normal Q-Q of the residuals'),
+		main = paste0(MainTitlePlusColon(main), 'Normal Q-Q of the residuals'),
 		grid = FALSE                                        ,
 		col.lines = 1                                       ,
 		...
@@ -197,4 +200,6 @@ plot.OpenStatsMM = function (x                        ,
 	)
 	par(ask = p$ask, mfrow = p$mfrow)
 }
+
+
 

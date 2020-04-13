@@ -1,5 +1,5 @@
 summary.NULL = function(object, ...) {
-	message0('No summary available for a NULL object')
+	message0('No summary available for NULL objects')
 }
 summary.OpenStatsRR = function(object, format = 'rst', ...) {
 	if (!is.null(object$messages) || is.null(object)) {
@@ -33,25 +33,27 @@ summaryCore = function(x,
 											 procedure = 'MM',
 											 format = 'rst',
 											 ...) {
-	message0('Working on the summary table ...')
+	message0('Working out the summary table ...')
 	requireNamespace("knitr")
-	vo = OpenStatsReport(object           = x    ,
-													JSON             = FALSE,
-													ReportNullSchema = FALSE,
-													RemoveNullKeys   = FALSE )
-	pasteComma2 = function(...) {
+	vo = OpenStatsReport(
+		object           = x    ,
+		JSON             = FALSE,
+		ReportNullSchema = FALSE,
+		RemoveNullKeys   = FALSE
+	)
+	pasteComma2 = function(...,	NULLChar = ' - ') {
 		requireNamespace("rlist")
 		inp = as.list(...)
 		inp = list.clean(inp)
 		if (is.null(inp)           ||
 				length (inp) < 1)
-			r = ' - '
+			r = NULLChar
 		else
 			r = pasteCommaJustForSummary(
 				...,
 				replaceNull   = TRUE  ,
 				truncate      = FALSE ,
-				replaceNullby = ' - '
+				replaceNullby = NULLChar
 			)
 		return(r)
 	}
@@ -111,6 +113,7 @@ summaryCore = function(x,
 			fixed = TRUE
 		))
 	}), ]
+	outTRemoved[outTRemoved %in% ' - '] = NA
 	return(invisible(outTRemoved))
 }
 

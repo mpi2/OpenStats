@@ -4060,3 +4060,9 @@ totalListElements = function(x) {
 	r = sum(unlist(lapply(x, length)))
 	return(r)
 }
+
+MainTitlePlusColon = function(x = NULL){
+	x = if(is.null(x))
+		paste0(x,': ')
+	return(x)
+}

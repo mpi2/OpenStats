@@ -464,6 +464,13 @@ summary.OpenStatsList = function(object,
 	return(r)
 }
 
+print.OpenStatsList = function(x,
+															 vars = NULL,
+															 ...) {
+	r = summary.OpenStatsList(object = x, vars = vars, ...)
+	return(invisible(r))
+}
+
 plot.OpenStatsList = function(x,
 															vars = NULL,
 															...) {

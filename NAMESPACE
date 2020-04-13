@@ -32,18 +32,28 @@ S3method(summary   , OpenStatsList)
 S3method(summary   , OpenStatsMM)
 S3method(summary   , OpenStatsRR)
 S3method(summary   , OpenStatsFE)
+S3method(summary   , OpenStatsComplementarySplit)
 S3method(summary   , NULL)
 
 S3method(plot      , OpenStatsList)
 S3method(plot      , OpenStatsMM)
 S3method(plot      , OpenStatsRR)
 S3method(plot      , OpenStatsFE)
+S3method(plot      , OpenStatsComplementarySplit)
 S3method(plot      , NULL)
- 
+
+
+S3method(print     , OpenStatsList)
+S3method(print     , OpenStatsMM)
+S3method(print     , OpenStatsRR)
+S3method(print     , OpenStatsFE)
+S3method(print     , OpenStatsComplementarySplit)
+S3method(print     , NULL)
+
 export(
-	OpenStatsList      ,
-	OpenStatsAnalysis  ,
-	OpenStatsReport    ,
+	OpenStatsList    ,
+	OpenStatsAnalysis,
+	OpenStatsReport  ,
   OpenStatsComplementarySplit
 )
 

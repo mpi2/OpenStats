@@ -83,5 +83,56 @@ OpenStatsComplementarySplit = function(object   = NULL   ,
 	if (!is.null(l))
 		names(l) = names(alTbls)
 	
+	class(l) = 'OpenStatsComplementarySplit'
 	return(invisible(l))
+}
+
+
+plot.OpenStatsComplementarySplit = function (x                   ,
+																						 main = 'Final Model',
+																						 ask = FALSE         ,
+																						 mfrow = c(2, 2)     ,
+																						 ...) {
+	R = NULL
+	if (is.null(x)) {
+		message0('No plot available for a NULL object')
+		return(R)
+	}
+	ObjectNames = names(x)
+	if (length(ObjectNames) > 0) {
+		lapply(ObjectNames, function(xp) {
+			plot(
+				x[[xp]]                     ,
+				main = paste0(xp, '\n', main),
+				ask = ask                   ,
+				mfrow = mfrow               ,
+				...
+			)
+		})
+	}
+	return(invisible(R))
+}
+
+summary.OpenStatsComplementarySplit = function(object, format = 'rst', ...) {
+	R = NULL
+	if (is.null(object)) {
+		message0('No summary available for a NULL object')
+		return(R)
+	}
+	ObjectNames = names(object)
+	if (length(ObjectNames) > 0) {
+		R = lapply(ObjectNames, function(xp) {
+			message0('Summary for ', xp)
+			summary(object[[xp]]    ,
+							format = format ,
+							caption = xp    , 
+							...)
+		})
+	}
+	return(invisible(R))
+}
+
+print.OpenStatsComplementarySplit = function(x, format = 'rst', ...) {
+	r = summary.OpenStatsComplementarySplit(object = x, format = format, ...)
+	return(invisible(r))
 }
