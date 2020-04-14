@@ -1,0 +1,126 @@
+---
+title: "Accessing data from the International Mouse Phenotyping Consortium (IMPC) using application programming interface (API) endpoint"
+author: "Hamed Haseli Mashhadi <hamedhm@ebi.ac.uk>"
+date: "`r format(Sys.time(), '%d %B %Y')`"
+output: 
+  html_document:
+    highlight: tango
+    number_sections: yes
+    toc: yes
+    toc_depth: 5
+  pdf_document: 
+    number_sections: yes
+    toc: yes
+    toc_depth: 5
+  word_document:
+    toc: yes
+    toc_depth: '5'
+---
+
+
+
+# Overview
+The International Mouse Phenotyping Consortium (IMPC) is an international effort by 19 research institutions to identify the function of every protein-coding gene in the mouse genome. To achieve this, the IMPC is systematically switching off or ‘knocking out’ each of the roughly 20,000 genes that make up the mouse genome. Subsequently, the knock out mice undergo standardised physiological tests (phenotyping tests) across a range of biological systems in order to infer gene function, before the data is made freely available to the research community on their website <https://www.mousephenotype.org/about-impc>.
+
+
+# Mouse Production and Phenotyping
+The IMPC phenotyping centres adhere to standardised allele production to knock out genes and pre-defined phenotyping tests to characterise mouse phenotypes. Each phenotyping tests forms a *phenotyping pipeline*. The phenotyping pipelines provide an exemplar of the potential of high-throughput pipelines for the acquisition of broad-based phenotype data at both embryonic and adult time points. The range of phenotyping platforms ensures the recovery of phenotype data across multiple systems and disease states. Wild-type mice are continuously run through the phenotyping pipelines, giving constantly growing baselines for the statistical analysis. More information about the IMPC phenotyping pipelines and procedures is available from  International Mouse Phenotyping Resource of Standardised Screens (*IMPReSS* <https://www.mousephenotype.org/impress>).
+
+
+# Programmatic data access
+All data collected by the IMPC is freely available from <https://www.mousephenotype.org>. Besides viewing in the web portal, it can also be downloaded for an independent analysis. Several channels are available, each tailored for accessing data for individual items, small sets, or in bulk. 
+
+
+## Programmatic access
+
+The full range of up-to-date IMPC data can be accessed through an application programming interface or API. The IMPC infrastructure is powered by Apache SOLR (<https://lucene.apache.org/solr/>) and the full SOLR query syntax and SOLR query parameters are accessible, see <https://lucene.apache.org/solr/resources.html> for SOLR documentation.
+
+Data are stored across several compartments, or cores and each can be queried independently. The cores provide many fields that can be searched on. For example, it is possible to search and filter by phenotyping centre, mouse colony, phenotype, and many other settings. Many of these filtering criteria are shared across the cores, so there are common data access patterns. There are, however, fields that are specific to each core.
+
+
+## Raw experimental data
+The ‘experiment’ data core contains raw measurements collected on individual specimens. It contains all details of the animals as well as the pipeline, WT/KO specification, procedure, parameter (as explained in <https://www.mousephenotype.org/impress>), measurement etc. See  <https://www.mousephenotype.org/help/programmatic-data-access/data-fields/> for a complete list of available parameters. Some notable data fields available in the *experiment* core are in the table below.
+
+Field name |    Description
+|:-------------|:-------------|
+gene_symbol    | Mouse gene identifier in symbol format, e.g. Car4
+gene_accession_id |    Mouse gene identifier in MGI id format, e.g. MGI:1096574
+pipeline_stable_id    | Identifier of IMPRESS pipeline
+procedure_stable_id    | Identifier of phenotyping procedure
+allele_accession_id    | Allele stable identifier
+zygosity    | Zygosity of the mutant specimens
+sex    | Sex of the mutant specimens
+weight    | Weight of specimen
+parameter_stable_id    | Identifier for phenotyping procedure
+*data_point* or *category* |    Measured value
+
+
+
+## Access patterns
+Programmatic access to IMPC data relies on the [SOLR query syntax <https://lucene.apache.org/solr/guide/7_0/searching.html#searching>]. This approach is flexible and hence powerful, but this means there are complex features and behaviours that may not always be simple to understand. Using common data access patterns can be a helpful way to limit the complexity and obtain answers to specific queries. 
+
+The examples below show URLs that query a data core called ‘genotype-phenotype’. These examples provide a guide for constructing a query URL. All the example URLs can be pasted into a browser address bar or read directly from R using the function *read.csv()*.
+
+**Size of output**
+
+One of the most important settings to control when using the API is the size of the output or the number of records returned from the server. This can be achieved by appending a settings ‘rows’ at the end of each query. 
+
+Note. – If *rows* is not specified, the server returns 10 records.
+
+Using the **experiment** core as an example, the following URLs provide two small subsets of the available data.
+
+```
+https://www.ebi.ac.uk/mi/impc/solr/experiment/select?q=*:*&rows=1
+https://www.ebi.ac.uk/mi/impc/solr/experiment/select?q=*:*&rows=5
+```
+
+**Output format**
+
+Two common output formats are JavaScript Object Notation (*JSON*) and Comma Separated Values (*CSV*), which can be toggled via an argument ‘wt’. The queries above become as follows.
+
+```
+https://www.ebi.ac.uk/mi/impc/solr/genotype-phenotype/select?q=*:*&rows=1&wt=json
+https://www.ebi.ac.uk/mi/impc/solr/genotype-phenotype/select?q=*:*&rows=5&wt=csv
+```
+
+Depending on software used, one or the other may appear more readable in certain situations. The csv format is convenient for use with spreadsheet programs such as R or Python. Both formats are compatible with programmatic processing in R, Python, or the majority of data analysis frameworks. Below shows the examples of reading the data directly from R using  *read.csv()* functon:
+
+```{r}
+url = 'https://www.ebi.ac.uk/mi/impc/solr/experiment/select?q=*:*&rows=50&wt=csv&fq=parameter_stable_id:IMPC_BWT_001_001'
+df = read.csv(url, as.is = TRUE)
+df[, c('external_sample_id'     ,
+             'biological_sample_group',
+             'sex'                    ,
+             'age_in_days')]
+
+```
+
+**Output fields**
+
+The default behaviour for each endpoint is to return all fields available in a data store, akin to returning all columns from a large table. It is possible to limit the output by specifying the desired fields via an argument ‘fl’.
+
+```
+https://www.ebi.ac.uk/mi/impc/solr/experiment/select?q=*:*&rows=5&fl=gene_symbol,phenotyping_center&wt=json
+```
+
+Note that some records in the output may appear to be identical – they only appear so because their distinguishing features are not provided in the immediate output.
+
+**Filter fields**
+
+The queries can be set to return data on a subset of records of interest by replacing the text ‘q=*:*’ in the previous queries. Any of the available fields from <https://www.mousephenotype.org/help/programmatic-data-access/data-fields/> can be used in a filter. Common patterns include filter by gene symbol, procedure, or phenotype. 
+
+Combined with the other techniques, filtering provides a direct mechanism to answer very specific queries. The following fetches all significant phenotypes for a gene symbol.
+
+```
+https://www.ebi.ac.uk/mi/impc/solr/experiment/select?q=gene_symbol:Car4&rows=20&fl=gene_symbol,zygosity,sex&wt=json
+https://www.ebi.ac.uk/mi/impc/solr/experiment/select?q=gene_symbol:Car4&rows=20&fl=gene_symbol,zygosity,sex&wt=csv
+```
+Note that the query requests 20 records, but the server returns a smaller number. This is an indication that the output contains all the data that satisfy the filter, i.e. none have been left out.
+
+
+
+# Useful resources
+For a complete description of the IMPC data see the IMPC FAQ page on <https://www.mousephenotype.org/help/faqs/> or use the IMPC contact page <https://www.mousephenotype.org/contact-us/>
+
+
+
