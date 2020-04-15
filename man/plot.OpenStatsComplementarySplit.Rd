@@ -32,6 +32,9 @@ The plot function creates some visualisations for the split results from the lin
 - The density plot of the response variable and the normality test p-value\cr
 }
 
+\value{
+Not applicable
+}
 \author{
   Hamed Haseli Mashhadi <hamedhm@ebi.ac.uk>
 }

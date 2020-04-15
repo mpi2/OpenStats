@@ -26,7 +26,7 @@ The plot function produces two sets of plots for:\cr
 - continuous data: histogram 
 }
 
-\value{Not applicable}
+\value{List of two plot objects, Continuous and Categorical}
 
 \author{
 	Hamed Haseli Mashhadi <hamedhm@ebi.ac.uk>

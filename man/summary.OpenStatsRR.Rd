@@ -47,6 +47,32 @@ The output consists of a pair of values separated by comma, e.g. 1,1, for low an
 	\code{\link{OpenStatsAnalysis}}, 	\code{\link{summary.OpenStatsFE}}, 	\code{\link{summary.OpenStatsMM}}
 }
 \examples{
-example(OpenStatsAnalysis)
+####################################################################
+# Data preparation
+####################################################################
+#################
+# Continuous data - Creating OpenStatsList object
+#################
+fileCon = system.file("extdata", "test_continuous.csv", package = "OpenStats")
+test_Cont = OpenStatsList(
+	dataset = read.csv(fileCon),
+	testGenotype = 'experimental',
+	refGenotype  = 'control',
+	dataset.colname.genotype = 'biological_sample_group',
+	dataset.colname.batch = 'date_of_experiment',
+	dataset.colname.lifestage = NULL,
+	dataset.colname.weight = 'weight',
+	dataset.colname.sex = 'sex'
+)
+
+#################
+# Reference range framework
+#################
+RR_result = OpenStatsAnalysis(
+	OpenStatsList = test_Cont,
+	method = 'RR',
+	RR_formula  = data_point ~ Genotype + Sex
+)
+summary(RR_result)
 }
 

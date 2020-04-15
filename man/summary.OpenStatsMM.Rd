@@ -46,6 +46,32 @@ The output consists of the following statistics:
 	\code{\link{OpenStatsAnalysis}}, 	\code{\link{summary.OpenStatsFE}}, 	\code{\link{summary.OpenStatsRR}}
 }
 \examples{
-example(OpenStatsAnalysis)
+####################################################################
+# Data preparation
+####################################################################
+#################
+# Continuous data - Creating OpenStatsList object
+#################
+fileCon = system.file("extdata", "test_continuous.csv", package = "OpenStats")
+test_Cont = OpenStatsList(
+	dataset = read.csv(fileCon),
+	testGenotype = 'experimental',
+	refGenotype  = 'control',
+	dataset.colname.genotype = 'biological_sample_group',
+	dataset.colname.batch = 'date_of_experiment',
+	dataset.colname.lifestage = NULL,
+	dataset.colname.weight = 'weight',
+	dataset.colname.sex = 'sex'
+)
+
+#################
+#  Optimised Linear Mixed model (MM) framework
+#################
+MM1_result = OpenStatsAnalysis(
+	OpenStatsList = test_Cont,
+	method = 'MM',
+	MM_fixed = data_point ~ Genotype  + Weight
+)
+summary(MM1_result)
 }
 
