@@ -38,3 +38,4 @@ vignettes/*.pdf
 rsconnect/
 .Rproj.user
 .Rhistory
+inst/scripts/Readme.html

@@ -2,10 +2,10 @@
 \alias{summary.OpenStatsList}
 
 \title{
-	Summary for a OpenStatsList object
+	Summary for an OpenStatsList object
 }
 \description{
-	This function provides a detailed summary of a OpenStatsList object
+	This function provides a detailed summary of an OpenStatsList object
 }
 \usage{
 	\method{summary}{OpenStatsList}(object, vars = NULL, ...)
@@ -32,9 +32,9 @@ Tabe of summary statistics
 }
 
 \seealso{
-	\code{\link{OpenStatsList}}
+	\code{\link{OpenStatsList}}, \code{\link{summary.OpenStatsList}}
 }
 
 \examples{
-	example(OpenStatsList)
+example(OpenStatsList)
 }

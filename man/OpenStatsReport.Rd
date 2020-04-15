@@ -51,6 +51,6 @@ OpenStatsReport(
 	\code{\link{OpenStatsAnalysis}}
 }
 \examples{
-	example(OpenStatsAnalysis)
+example(OpenStatsAnalysis)
 }
 

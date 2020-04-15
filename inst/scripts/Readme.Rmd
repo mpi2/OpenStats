@@ -57,7 +57,7 @@ parameter_stable_id    | Identifier for phenotyping procedure
 
 
 ## Access patterns
-Programmatic access to IMPC data relies on the [SOLR query syntax <https://lucene.apache.org/solr/guide/7_0/searching.html#searching>]. This approach is flexible and hence powerful, but this means there are complex features and behaviours that may not always be simple to understand. Using common data access patterns can be a helpful way to limit the complexity and obtain answers to specific queries. 
+Programmatic access to IMPC data relies on the [SOLR query syntax <https://lucene.apache.org/solr/guide/7_5/searching.html>]. This approach is flexible and hence powerful, but this means there are complex features and behaviours that may not always be simple to understand. Using common data access patterns can be a helpful way to limit the complexity and obtain answers to specific queries. 
 
 The examples below show URLs that query a data core called ‘genotype-phenotype’. These examples provide a guide for constructing a query URL. All the example URLs can be pasted into a browser address bar or read directly from R using the function *read.csv()*.
 

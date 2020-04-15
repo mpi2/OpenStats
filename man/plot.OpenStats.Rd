@@ -1,14 +1,10 @@
 \name{plot.OpenStatsList}
 \alias{plot.OpenStatsList}
+\title{plot for an `OpenStatsList` object}
+\description{This function visualises an `OpenStatsList` object}
 
-\title{
-	plot for a `OpenStatsList` object
-}
-\description{
-	This function visualises a `OpenStatsList` object
-}
 \usage{
-	\method{plot}{OpenStatsList}(x, vars = NULL, ...)
+\method{plot}{OpenStatsList}(x, vars = NULL, ...)
 }
 
 \arguments{
@@ -23,6 +19,13 @@
 	}
 }
 
+\details{
+The plot is split into two plots:\cr
+
+- categorical data: is shown in a scatter plot of proportion\cr
+- continuous data: the histogram is show
+}
+
 \value{Not applicable}
 
 \author{
@@ -34,5 +37,5 @@
 }
 
 \examples{
-	example(OpenStatsList)
+example(OpenStatsList)
 }
