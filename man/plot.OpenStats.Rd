@@ -20,10 +20,10 @@
 }
 
 \details{
-The plot is split into two plots:\cr
+The plot function produces two sets of plots for:\cr
 
-- categorical data: is shown in a scatter plot of proportion\cr
-- continuous data: the histogram is show
+- categorical data: scatter plot of proportions\cr
+- continuous data: histogram 
 }
 
 \value{Not applicable}

@@ -127,6 +127,10 @@ Other parameters that can be passed to:\cr
   2. If the function fails:
   \item{messages}{A placeholder for the errors/warnings in the case of failure}
 }
+
+\details{
+OpenStatsReport function can be used to extract the key elements of the analysis from the OpenStatsMM/FE/RR objects. The output from OpenStatsReport has schemed that makes it easy to be populated to the downstream processes such as storing and accessing results from a database.
+}
 \author{
   Hamed Haseli Mashhadi <hamedhm@ebi.ac.uk>
 }
