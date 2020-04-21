@@ -36,5 +36,5 @@ Tabe of summary statistics
 }
 
 \examples{
-	example(OpenStatsList)
+example(OpenStatsList)
 }

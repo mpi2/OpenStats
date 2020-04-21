@@ -103,29 +103,32 @@ Hamed Haseli Mashhadi <hamedhm@ebi.ac.uk>
 }
 \examples{
 ####################################################################
-df = read.csv(system.file("extdata", "test_continuous.csv", package = "OpenStats"))
+df <- read.csv(system.file("extdata", "test_continuous.csv", package = "OpenStats"))
 ####################################################################
 # OpenStatsList object
 ####################################################################
-OpenStatsList   = OpenStatsList(
-	dataset   = df,
-	testGenotype = 'experimental',
-	refGenotype = 'control',
-	dataset.colname.batch = 'date_of_experiment',
-	dataset.colname.genotype = 'biological_sample_group',
-	dataset.colname.sex = 'sex',
-	dataset.colname.weight = 'weight'
+OpenStatsList <- OpenStatsList(
+  dataset = df,
+  testGenotype = "experimental",
+  refGenotype = "control",
+  dataset.colname.batch = "date_of_experiment",
+  dataset.colname.genotype = "biological_sample_group",
+  dataset.colname.sex = "sex",
+  dataset.colname.weight = "weight"
 )
-p = plot   (OpenStatsList,
-						vars = c('Genotype', 
-										 'Sex', 
-										 'data_point',
-										 'age_in_days'))
+p <- plot(OpenStatsList,
+  vars = c(
+    "Genotype",
+    "Sex",
+    "data_point",
+    "age_in_days"
+  )
+)
 p$Continuous
 p$Categorical
-summary(OpenStatsList, style = 'grid')
-class  (OpenStatsList)
-rm     (OpenStatsList)
+summary(OpenStatsList, style = "grid")
+class(OpenStatsList)
+rm(OpenStatsList)
 }
 
 \keyword{ OpenStatsList }

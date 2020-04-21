@@ -53,24 +53,24 @@ The output consists of the following statistics:
 #################
 # Categorical data - Creating OpenStatsList object
 #################
-fileCat   = system.file("extdata", "test_categorical.csv", package = "OpenStats")
-test_Cat = OpenStatsList(
-	dataset = read.csv(fileCat, na.strings = '-'),
-	testGenotype = 'Aff3/Aff3',
-	refGenotype = '+/+',
-	dataset.colname.genotype = 'Genotype',
-	dataset.colname.batch = 'Assay.Date',
-	dataset.colname.lifestage = NULL,
-	dataset.colname.weight = 'Weight',
-	dataset.colname.sex = 'Sex'
+fileCat <- system.file("extdata", "test_categorical.csv", package = "OpenStats")
+test_Cat <- OpenStatsList(
+  dataset = read.csv(fileCat, na.strings = "-"),
+  testGenotype = "Aff3/Aff3",
+  refGenotype = "+/+",
+  dataset.colname.genotype = "Genotype",
+  dataset.colname.batch = "Assay.Date",
+  dataset.colname.lifestage = NULL,
+  dataset.colname.weight = "Weight",
+  dataset.colname.sex = "Sex"
 )
 #################
 # Fisher's exact test framework
 #################
-FE_result = OpenStatsAnalysis(
-	OpenStatsList = test_Cat,
-	method = "FE",
-	FE_formula =  Thoracic.Processes ~ Genotype + Sex
+FE_result <- OpenStatsAnalysis(
+  OpenStatsList = test_Cat,
+  method = "FE",
+  FE_formula = Thoracic.Processes ~ Genotype + Sex
 )
 print(FE_result)
 }

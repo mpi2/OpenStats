@@ -31,10 +31,11 @@ OpenStatsAnalysis(
 				 model = MM_fixed,
 				 data = OpenStatsListObject@datasetPL
 				 )
-			)
+			){
 		varIdent(form = ~ 1 |  LifeStage)
-	else
-		varIdent(form = ~ 1 |  Genotype),
+	}else{
+		varIdent(form = ~ 1 |  Genotype)
+		},
 	MM_direction = "both",
 	MM_checks    = c(TRUE, TRUE, TRUE, TRUE),
 	MM_optimise  = c(TRUE, TRUE, TRUE, TRUE, TRUE, TRUE),
@@ -144,30 +145,30 @@ OpenStatsReport function can be used to extract the key elements of the analysis
 #################
 # 1.1 Continuous data - Creating OpenStatsList object
 #################
-fileCon = system.file("extdata", "test_continuous.csv", package = "OpenStats")
-test_Cont = OpenStatsList(
-	dataset = read.csv(fileCon),
-	testGenotype = 'experimental',
-	refGenotype  = 'control',
-	dataset.colname.genotype = 'biological_sample_group',
-	dataset.colname.batch = 'date_of_experiment',
-	dataset.colname.lifestage = NULL,
-	dataset.colname.weight = 'weight',
-	dataset.colname.sex = 'sex'
+fileCon <- system.file("extdata", "test_continuous.csv", package = "OpenStats")
+test_Cont <- OpenStatsList(
+  dataset = read.csv(fileCon),
+  testGenotype = "experimental",
+  refGenotype = "control",
+  dataset.colname.genotype = "biological_sample_group",
+  dataset.colname.batch = "date_of_experiment",
+  dataset.colname.lifestage = NULL,
+  dataset.colname.weight = "weight",
+  dataset.colname.sex = "sex"
 )
 #################
 # 1.2 Categorical data - Creating OpenStatsList object
 #################
-fileCat   = system.file("extdata", "test_categorical.csv", package = "OpenStats")
-test_Cat = OpenStatsList(
-	dataset = read.csv(fileCat, na.strings = '-'),
-	testGenotype = 'Aff3/Aff3',
-	refGenotype = '+/+',
-	dataset.colname.genotype = 'Genotype',
-	dataset.colname.batch = 'Assay.Date',
-	dataset.colname.lifestage = NULL,
-	dataset.colname.weight = 'Weight',
-	dataset.colname.sex = 'Sex'
+fileCat <- system.file("extdata", "test_categorical.csv", package = "OpenStats")
+test_Cat <- OpenStatsList(
+  dataset = read.csv(fileCat, na.strings = "-"),
+  testGenotype = "Aff3/Aff3",
+  refGenotype = "+/+",
+  dataset.colname.genotype = "Genotype",
+  dataset.colname.batch = "Assay.Date",
+  dataset.colname.lifestage = NULL,
+  dataset.colname.weight = "Weight",
+  dataset.colname.sex = "Sex"
 )
 ####################################################################
 # 2 Testing frameworks
@@ -176,13 +177,13 @@ test_Cat = OpenStatsList(
 #################
 # 2.1 Optimised Linear Mixed model (MM) framework
 #################
-MM1_result = OpenStatsAnalysis(
-	OpenStatsList = test_Cont,
-	method = 'MM',
-	MM_fixed = data_point ~ Genotype  + Weight
+MM1_result <- OpenStatsAnalysis(
+  OpenStatsList = test_Cont,
+  method = "MM",
+  MM_fixed = data_point ~ Genotype + Weight
 )
-VO_MM1 = OpenStatsReport(MM1_result)
-plot(MM1_result, col = 2, main = 'Optimised model')
+VO_MM1 <- OpenStatsReport(MM1_result)
+plot(MM1_result, col = 2, main = "Optimised model")
 summary(MM1_result)
 
 
@@ -190,40 +191,40 @@ summary(MM1_result)
 # 2.2 Linear Mixed model (MM) with NO optimisation
 # for the fixed effects but random/weight effects
 #################
-MM2_result = OpenStatsAnalysis(
-	OpenStatsList = test_Cont,
-	method = 'MM',
-	MM_fixed = data_point ~ Genotype  + Weight,
-	MM_lower =~ Genotype  + Weight + 1
-	# Or simply MM_optimise = c(0, 1, 1, 1, 1, 1)
+MM2_result <- OpenStatsAnalysis(
+  OpenStatsList = test_Cont,
+  method = "MM",
+  MM_fixed = data_point ~ Genotype + Weight,
+  MM_lower = ~ Genotype + Weight + 1
+  # Or simply MM_optimise = c(0, 1, 1, 1, 1, 1)
 )
-VO_MM2 = OpenStatsReport(MM2_result)
-plot(MM2_result, col = 8, main = 'No optimisation on the fixed effects')
+VO_MM2 <- OpenStatsReport(MM2_result)
+plot(MM2_result, col = 8, main = "No optimisation on the fixed effects")
 summary(MM2_result)
 
 #################
 # 2.3 Linear Mixed model (MM) with NO optimisation on the model
 #################
-MM3_result = OpenStatsAnalysis(
-	OpenStatsList = test_Cont,
-	method = 'MM',
-	MM_fixed = data_point ~ Genotype  + Weight,
-	MM_optimise = c(0, 0, 0, 1, 1, 1)
+MM3_result <- OpenStatsAnalysis(
+  OpenStatsList = test_Cont,
+  method = "MM",
+  MM_fixed = data_point ~ Genotype + Weight,
+  MM_optimise = c(0, 0, 0, 1, 1, 1)
 )
-VO_MM3 = OpenStatsReport(MM3_result)
-plot(MM3_result, col = 3, main = 'Not optimised model')
+VO_MM3 <- OpenStatsReport(MM3_result)
+plot(MM3_result, col = 3, main = "Not optimised model")
 summary(MM3_result)
 
 
 #################
 # 2.4 Reference range framework
 #################
-RR_result = OpenStatsAnalysis(
-	OpenStatsList = test_Cont,
-	method = 'RR',
-	RR_formula  = data_point ~ Genotype + Sex
+RR_result <- OpenStatsAnalysis(
+  OpenStatsList = test_Cont,
+  method = "RR",
+  RR_formula = data_point ~ Genotype + Sex
 )
-VO_RR = OpenStatsReport(RR_result)
+VO_RR <- OpenStatsReport(RR_result)
 plot(RR_result, col = 3:4)
 summary(RR_result)
 
@@ -231,12 +232,12 @@ summary(RR_result)
 #################
 # 2.5 Fisher's exact test framework
 #################
-FE_result = OpenStatsAnalysis(
-	OpenStatsList = test_Cat,
-	method = "FE",
-	FE_formula =  Thoracic.Processes ~ Genotype + Sex
+FE_result <- OpenStatsAnalysis(
+  OpenStatsList = test_Cat,
+  method = "FE",
+  FE_formula = Thoracic.Processes ~ Genotype + Sex
 )
-VO_FE = OpenStatsReport(FE_result)
+VO_FE <- OpenStatsReport(FE_result)
 plot(FE_result, col = 1:2)
 summary(FE_result)
 }

@@ -86,12 +86,14 @@ https://www.ebi.ac.uk/mi/impc/solr/genotype-phenotype/select?q=*:*&rows=5&wt=csv
 Depending on software used, one or the other may appear more readable in certain situations. The csv format is convenient for use with spreadsheet programs such as R or Python. Both formats are compatible with programmatic processing in R, Python, or the majority of data analysis frameworks. Below shows the examples of reading the data directly from R using  *read.csv()* functon:
 
 ```{r}
-url = 'https://www.ebi.ac.uk/mi/impc/solr/experiment/select?q=*:*&rows=50&wt=csv&fq=parameter_stable_id:IMPC_BWT_001_001'
-df = read.csv(url, as.is = TRUE)
-df[, c('external_sample_id'     ,
-             'biological_sample_group',
-             'sex'                    ,
-             'age_in_days')]
+url <- "https://www.ebi.ac.uk/mi/impc/solr/experiment/select?q=*:*&rows=50&wt=csv&fq=parameter_stable_id:IMPC_BWT_001_001"
+df <- read.csv(url, as.is = TRUE)
+df[, c(
+  "external_sample_id",
+  "biological_sample_group",
+  "sex",
+  "age_in_days"
+)]
 
 ```
 

@@ -50,25 +50,25 @@ The plot function creates some visualisations for the reference range plus frame
 #################
 # Continuous data - Creating OpenStatsList object
 #################
-fileCon = system.file("extdata", "test_continuous.csv", package = "OpenStats")
-test_Cont = OpenStatsList(
-	dataset = read.csv(fileCon),
-	testGenotype = 'experimental',
-	refGenotype  = 'control',
-	dataset.colname.genotype = 'biological_sample_group',
-	dataset.colname.batch = 'date_of_experiment',
-	dataset.colname.lifestage = NULL,
-	dataset.colname.weight = 'weight',
-	dataset.colname.sex = 'sex'
+fileCon <- system.file("extdata", "test_continuous.csv", package = "OpenStats")
+test_Cont <- OpenStatsList(
+  dataset = read.csv(fileCon),
+  testGenotype = "experimental",
+  refGenotype = "control",
+  dataset.colname.genotype = "biological_sample_group",
+  dataset.colname.batch = "date_of_experiment",
+  dataset.colname.lifestage = NULL,
+  dataset.colname.weight = "weight",
+  dataset.colname.sex = "sex"
 )
 
 #################
 # Reference range framework
 #################
-RR_result = OpenStatsAnalysis(
-	OpenStatsList = test_Cont,
-	method = 'RR',
-	RR_formula  = data_point ~ Genotype + Sex
+RR_result <- OpenStatsAnalysis(
+  OpenStatsList = test_Cont,
+  method = "RR",
+  RR_formula = data_point ~ Genotype + Sex
 )
 plot(RR_result, col = 3:4)
 }

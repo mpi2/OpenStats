@@ -52,26 +52,26 @@ The plot function creates some visualisations for the linear mixed model framewo
 #################
 # Continuous data - Creating OpenStatsList object
 #################
-fileCon = system.file("extdata", "test_continuous.csv", package = "OpenStats")
-test_Cont = OpenStatsList(
-	dataset = read.csv(fileCon),
-	testGenotype = 'experimental',
-	refGenotype  = 'control',
-	dataset.colname.genotype = 'biological_sample_group',
-	dataset.colname.batch = 'date_of_experiment',
-	dataset.colname.lifestage = NULL,
-	dataset.colname.weight = 'weight',
-	dataset.colname.sex = 'sex'
+fileCon <- system.file("extdata", "test_continuous.csv", package = "OpenStats")
+test_Cont <- OpenStatsList(
+  dataset = read.csv(fileCon),
+  testGenotype = "experimental",
+  refGenotype = "control",
+  dataset.colname.genotype = "biological_sample_group",
+  dataset.colname.batch = "date_of_experiment",
+  dataset.colname.lifestage = NULL,
+  dataset.colname.weight = "weight",
+  dataset.colname.sex = "sex"
 )
 
 #################
 #  Optimised Linear Mixed model (MM) framework
 #################
-MM1_result = OpenStatsAnalysis(
-	OpenStatsList = test_Cont,
-	method = 'MM',
-	MM_fixed = data_point ~ Genotype  + Weight
+MM1_result <- OpenStatsAnalysis(
+  OpenStatsList = test_Cont,
+  method = "MM",
+  MM_fixed = data_point ~ Genotype + Weight
 )
-print(MM1_result, col = 2, main = 'Optimised model')
+print(MM1_result, col = 2, main = "Optimised model")
 }
 

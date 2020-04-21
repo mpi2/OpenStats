@@ -41,37 +41,37 @@ Hamed Haseli Mashhadi <hamedhm@ebi.ac.uk>
 # Data preparation
 # - Continuous data - Creating OpenStatsList object
 ####################################################################
-fileCon = system.file("extdata", "test_continuous.csv", package = "OpenStats")
-test_Cont = OpenStatsList(
-	dataset = read.csv(fileCon),
-	testGenotype = 'experimental',
-	refGenotype  = 'control',
-	dataset.colname.genotype = 'biological_sample_group',
-	dataset.colname.batch = 'date_of_experiment',
-	dataset.colname.lifestage = NULL,
-	dataset.colname.weight = 'weight',
-	dataset.colname.sex = 'sex'
+fileCon <- system.file("extdata", "test_continuous.csv", package = "OpenStats")
+test_Cont <- OpenStatsList(
+  dataset = read.csv(fileCon),
+  testGenotype = "experimental",
+  refGenotype = "control",
+  dataset.colname.genotype = "biological_sample_group",
+  dataset.colname.batch = "date_of_experiment",
+  dataset.colname.lifestage = NULL,
+  dataset.colname.weight = "weight",
+  dataset.colname.sex = "sex"
 )
 ####################################################################
 # Analysis
 # -  Optimised Linear Mixed Model (MM) framework
 ####################################################################
-MM_result = OpenStatsAnalysis(
-	OpenStatsList = test_Cont,
-	method = 'MM',
-	MM_fixed = data_point ~ Genotype  + Weight
+MM_result <- OpenStatsAnalysis(
+  OpenStatsList = test_Cont,
+  method = "MM",
+  MM_fixed = data_point ~ Genotype + Weight
 )
 ####################################################################
 # Split on Sex
 # ** This split is already available from the normal running of OpenStatsAnalysis
 ####################################################################
-output = OpenStatsComplementarySplit(object = MM_result, variables = 'Sex')  
+output <- OpenStatsComplementarySplit(object = MM_result, variables = "Sex")
 # Structure of the output object
 lapply(output, names)
 # Summaries
-summary(output,format = 'pandoc') # See knitr:kable function for more formats
+summary(output, format = "pandoc") # See knitr:kable function for more formats
 # Plots
-plot(output, ask=TRUE)
+plot(output, ask = TRUE)
 }
 \keyword{ ~OpenStats }
 \keyword{ ~SplitEffect }

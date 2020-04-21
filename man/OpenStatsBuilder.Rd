@@ -45,32 +45,32 @@ OpenStatsListBuilder(
 
 \examples{
 \donttest{
-  file = system.file("extdata", "test_continuous.csv", package = "OpenStats")
-  ####################################################################
-  # PhenListObject from PhenStat package
-  # The R package PhenStats must be installed in prior
-  ####################################################################
-  PhenListObject = PhenList(
+	file <- system.file("extdata", "test_continuous.csv", package = "OpenStats")
+	####################################################################
+	# PhenListObject from PhenStat package
+	# The R package PhenStats must be installed in prior
+	####################################################################
+	PhenListObject <- PhenList(
 	  dataset = read.csv(file),
-	  testGenotype = 'experimental',
-	  refGenotype = 'control',
-	  dataset.colname.batch = 'date_of_experiment',
-	  dataset.colname.genotype = 'biological_sample_group',
-	  dataset.colname.sex = 'sex',
-	  dataset.colname.weight = 'weight'
-  )
-  ####################################################################
-  # OpenStatsList object
-  ####################################################################
-  OpenStatsListBuilder   = OpenStatsListBuilder(
+	  testGenotype = "experimental",
+	  refGenotype = "control",
+	  dataset.colname.batch = "date_of_experiment",
+	  dataset.colname.genotype = "biological_sample_group",
+	  dataset.colname.sex = "sex",
+	  dataset.colname.weight = "weight"
+	)
+	####################################################################
+	# OpenStatsList object
+	####################################################################
+	OpenStatsListBuilder <- OpenStatsListBuilder(
 	  PhenListobject = PhenListObject,
-	  DOE = 'Batch',
-	  DOB = 'Birth.Date',
+	  DOE = "Batch",
+	  DOB = "Birth.Date",
 	  d.threshold = 99
-  )
-  plot(OpenStatsListBuilder)
-  class(OpenStatsListBuilder)
-  rm(OpenStatsListBuilder)
+	)
+	plot(OpenStatsListBuilder)
+	class(OpenStatsListBuilder)
+	rm(OpenStatsListBuilder)
 }
 }
 
