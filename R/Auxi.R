@@ -4259,6 +4259,10 @@ USerManualSlotName <- function(x, name = "OpenStats") {
     xn <- names(x)
   }
 
+  if (length(nx) < 1) {
+    return(NULL)
+  }
+  
   for (i in seq_along(xn)) {
     cat("    ", i, ". ", xn[i], "  \n")
   }
@@ -4427,4 +4431,12 @@ MainTitlePlusColon <- function(x = NULL) {
     paste0(x, ": ")
   }
   return(x)
+}
+
+seq_along0 <- function(x, makeZero = TRUE) {
+  s <- seq_along(x)
+  if (makeZero && length(x) < 1) {
+    s <- 1:0
+  }
+  return(s)
 }

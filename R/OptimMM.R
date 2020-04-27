@@ -64,7 +64,7 @@ M.opt <- function(object = NULL,
     message0(mdl, ": Fitting the full model ... ")
     fixed <- initialFixed
     fixedTerms <- formulaTerms(initialFixed)
-    for (i in seq_along(fixedTerms)) {
+    for (i in seq_along0(fixedTerms)) {
       I.Model <- tryCatch(
         expr = do.call(
           mdl,
