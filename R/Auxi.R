@@ -4259,7 +4259,7 @@ USerManualSlotName <- function(x, name = "OpenStats") {
     xn <- names(x)
   }
 
-  if (length(nx) < 1) {
+  if (length(xn) < 1) {
     return(NULL)
   }
   
