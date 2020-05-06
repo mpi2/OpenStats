@@ -127,24 +127,33 @@ plot.OpenStatsMM <- function(x,
                              mfrow = c(2, 2),
                              ...) {
   requireNamespace("car")
-  fm <- x$output$Final.Model
-  formula <- formula(fm)
-  transData <- applyFormulaToData(formula = formula, getData(fm))
-
   if (!is.null(x$messages) || is.null(x)) {
     message0("Due to error(s), no plot available")
     message0(x$messages)
     stop()
   }
   message0("Working on the plot ...")
+  fm <- x$output$Final.Model
+  formula <- formula(fm)
+  #transData <- applyFormulaToData(formula = formula, getData(fm))
+  transData <- applyFormulaToData(formula = formula, x$input$OpenStatsList@datasetPL)
+  n         <- nrow(transData$data)
+  if (!identical(x = sortDataFrame(x$input$OpenStatsList@datasetPL),
+                 y = sortDataFrame(getData(fm)))) {
+    message0(
+      "The input data is *NOT* the same as analysed dataset. ",
+      "It is typically due to missing values in the input data"
+    )
+  }
+  #
   p <- par()
   par(ask = ask, mfrow = mfrow)
 
   predR <- predict(fm)
   residR <- resid(fm)
-  respShapiroTest <- normality.test0(transData$data[, transData$names[1]])
+  respShapiroTest  <- normality.test0(transData$data[, transData$names[1]],
+                                      message=TRUE)
   residShapiroTest <- normality.test0(residR)
-  n <- length(na.omit(residR))
   plot(
     predR,
     residR,
@@ -155,7 +164,7 @@ plot.OpenStatsMM <- function(x,
   )
   abline(h = 0, lwd = 3, lty = 2)
   densityPlot(
-    residR,
+    na.omit(residR),
     xlab = ifelse(
       is.null(residShapiroTest$"P-value"),
       "Residuals",
@@ -163,7 +172,7 @@ plot.OpenStatsMM <- function(x,
         "Residuals - [",
         residShapiroTest$"Test",
         "] p-value = ",
-        round(residShapiroTest$"P-value", 8)
+        digit2Scientific(residShapiroTest$"P-value")
       )
     ),
     main = paste0(MainTitlePlusColon(main), "Density of the residuals"),
@@ -172,7 +181,7 @@ plot.OpenStatsMM <- function(x,
     ...
   )
   qqPlot(
-    as.vector(residR),
+    na.omit(as.vector(residR)),
     ylab = "Residuals",
     main = paste0(MainTitlePlusColon(main), "Normal Q-Q of the residuals"),
     grid = FALSE,
@@ -192,7 +201,7 @@ plot.OpenStatsMM <- function(x,
         " - [",
         respShapiroTest$"Test",
         "] p-value = ",
-        round(respShapiroTest$"P-value", 8)
+        digit2Scientific(respShapiroTest$"P-value")
       )
     ),
     rug = TRUE,

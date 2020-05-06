@@ -1,7 +1,7 @@
 Package: OpenStats
 Type: Package
 Title: A Robust and Scalable Software Package for Reproducible Analysis of High-Throughput genotype-phenotype association
-Version: 0.99.14
+Version: 1.1.2
 Author: Hamed Haseli Mashhadi
 Maintainer: Hamed Haseli Mashhadi <hamedhm@ebi.ac.uk>
 Description: Package contains several methods for statistical analysis of genotype to phenotype association in high-throughput screening pipelines.

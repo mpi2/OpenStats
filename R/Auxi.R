@@ -1894,8 +1894,28 @@ decimalplaces <- function(x) {
   }
 }
 
-dataSignature <- function(formula, data, digits = 10) {
-  a.vars <- all_vars0(formula)
+names0 <- function(x) {
+  r <- if (is.null(x)) {
+    NULL
+  } else {
+    names(x)
+  }
+  return(r)
+}
+
+FormulaDataColNames <- function(formula = NULL, data = NULL) {
+  r <- if (is.null(formula)) {
+    names0(data)
+  } else {
+    all_vars0(formula)
+  }
+  return(r)
+}
+
+dataSignature <- function(formula = '.', data, digits = 10) {
+  
+  a.vars <- FormulaDataColNames(formula = formula, data = data)
+  
   if (!is.null(formula) &&
     !is.null(data) &&
     !is.null(a.vars) &&
@@ -3402,13 +3422,15 @@ sd01 <- function(x, na.rm = TRUE) {
   }
 }
 
-normality.test0 <- function(x, ...) {
+normality.test0 <- function(x, message = FALSE, ...) {
   if (!is.null(x) &&
     is.numeric(x) &&
     length(x) > 3 &&
     !is.na(sd0(x, na.rm = TRUE)) &&
     length(unique(na.omit(x))) > 3 &&
     sd0(x, na.rm = TRUE) > 0) {
+    if (message)
+      message0('The normality test result/p-value should be considered carefully.')
     #################### Shapiro
     if (length(x) < 5000) {
       r <- list(
@@ -4439,4 +4461,23 @@ seq_along0 <- function(x, makeZero = TRUE) {
     s <- 1:0
   }
   return(s)
+}
+
+digit2Scientific <- function(x, digit = 3) {
+  if (!is.null(x)   &&
+      length(x) > 0 &&
+      is.numeric(x)) {
+    x[!is.na(x)] <-
+      format(x[!is.na(x)], scientific = TRUE, digits = digit)
+  }
+  return(x)
+}
+
+sortDataFrame <- function(x = NULL) {
+  if (is.null(x) ||
+      !is(x, c("data.frame", "matrix"))) {
+    return(NULL)
+  } else {
+    return(x[, order(colnames(x)), drop = FALSE])
+  }
 }
