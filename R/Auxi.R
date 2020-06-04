@@ -1266,6 +1266,7 @@ cat.eff.size <- function(xtb,
   return(out)
 }
 
+
 printVarFreqfromTable <- function(tbl) {
   if (is.null(tbl) || any(dim(tbl) < 1)) {
     return(NULL)
@@ -4480,4 +4481,56 @@ sortDataFrame <- function(x = NULL) {
   } else {
     return(x[, order(colnames(x)), drop = FALSE])
   }
+}
+
+FeFurtherModels = function(x = NULL) {
+  if (is.null(x) ||
+      is.null(x$output$SplitModels))
+    return(NULL)
+  r = setNames(lapply(x$output$SplitModels, function(v) {
+    lapply0(
+      v,
+      FUN = function(v2) {
+        v3 <-
+          extractFisherSubTableResults(v2$result, what = c("p.value", "effect"))
+        v3
+      }
+    )
+  }),
+  nm = names(x$output$SplitModels))
+  return(r)
+} 
+
+lapply1 <- function(X, FUN, ...) {
+  r <- lapply0(X = X, FUN = FUN, ...)
+  if (length(r) == 1) {
+    r <- r[[1]]
+  }
+  return(r)
+}
+
+extractFisherSubTableResults1 <- function(x, what = "p.value") {
+  r <- extractFisherSubTableResults(x = x, what = what)
+  if (length(r) == 1) {
+    r <- r[[1]]
+  }
+  return(r)
+}
+ReFurtherModels = function(x = NULL) {
+  if (is.null(x) ||
+      is.null(x$output$SplitModels))
+    return(NULL)
+  r = setNames(lapply0(x, function(v) {
+    lapply1(
+      v,
+      FUN = function(v2) {
+        list(Result = extractFisherSubTableResults1(
+          x = v2$result,
+          what = c("p.value", "effect")
+        ),
+        RRextra = v2$RRextra)
+      }
+    )
+  }), nm = names(x))
+  return(r)
 }

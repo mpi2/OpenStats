@@ -48,7 +48,7 @@ S3method(print     , OpenStatsMM)
 S3method(print     , OpenStatsRR)
 S3method(print     , OpenStatsFE)
 S3method(print     , OpenStatsComplementarySplit)
-S3method(print     , NULL)
+#S3method(print     , NULL)
 
 export(
 	OpenStatsList    ,

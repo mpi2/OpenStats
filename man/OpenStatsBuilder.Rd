@@ -44,7 +44,8 @@ OpenStatsListBuilder(
 }
 
 \examples{
-\donttest{
+\dontrun{
+	library(PhenStat)
 	file <- system.file("extdata", "test_continuous.csv", package = "OpenStats")
 	####################################################################
 	# PhenListObject from PhenStat package
@@ -62,7 +63,7 @@ OpenStatsListBuilder(
 	####################################################################
 	# OpenStatsList object
 	####################################################################
-	OpenStatsListBuilder <- OpenStatsListBuilder(
+	OpenStatsListBuilder <- OpenStats:::OpenStatsListBuilder(
 	  PhenListobject = PhenListObject,
 	  DOE = "Batch",
 	  DOB = "Birth.Date",

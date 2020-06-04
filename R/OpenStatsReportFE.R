@@ -50,21 +50,7 @@ OpenStatsReportCat <- function(object) {
       "Is model optimised" = NULL,
       "Multibatch in analysis" = MultiBatch,
       "Gender included in analysis" = GenderIncludedInAnalysis(x),
-      "Further models" = if (!is.null(object$output$SplitModels)) {
-        setNames(sapply(object$output$SplitModels, function(v) {
-          lapply0(
-            v,
-            FUN = function(v2) {
-              v3 <- extractFisherSubTableResults(v2$result, what = c("p.value", "effect"))
-              v3
-            }
-          )
-        }),
-        nm = names(object$output$SplitModels)
-        )
-      } else {
-        NULL
-      },
+      "Further models" = FeFurtherModels(object), 
       "Effect sizes" = "Look at the individual models",
       "Other residual normality tests" = NULL
     )

@@ -59,21 +59,6 @@ OpenStatsReportRR <- function(object) {
     "Type" = "Total unique response divided by total number of response"
   )
   #####################################################################
-  extractFisherSubTableResults1 <- function(x, what = "p.value") {
-    r <- extractFisherSubTableResults(x = x, what = what)
-    if (length(r) == 1) {
-      r <- r[[1]]
-    }
-    return(r)
-  }
-  lapply1 <- function(X, FUN, ...) {
-    r <- lapply0(X = X, FUN = FUN, ...)
-    if (length(r) == 1) {
-      r <- r[[1]]
-    }
-    return(r)
-  }
-  #####################################################################
   DSsize <- SummaryStats(
     x = x,
     formula = object$input$formula,
@@ -101,24 +86,7 @@ OpenStatsReportRR <- function(object) {
       "Is model optimised" = NULL,
       "Multibatch in analysis" = MultiBatch,
       "Gender included in analysis" = GenderIncludedInAnalysis(x),
-      "Further models" = if (!is.null(Vsplit)) {
-        setNames(lapply0(Vsplit, function(v) {
-          lapply1(
-            v,
-            FUN = function(v2) {
-              list(
-                Result = extractFisherSubTableResults1(
-                  x = v2$result,
-                  what = c("p.value", "effect")
-                ),
-                RRextra = v2$RRextra
-              )
-            }
-          )
-        }), nm = names(Vsplit))
-      } else {
-        NULL
-      },
+      "Further models" = ReFurtherModels(Vsplit),
       "Effect sizes" = "Look at the individual models",
       "Other residual normality tests" = NULL
     )
