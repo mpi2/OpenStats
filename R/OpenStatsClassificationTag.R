@@ -2,7 +2,8 @@ classificationTag <- function(object = NULL,
                               phenotypeThreshold = 0.0001,
                               SexSpecificThreshold = .05,
                               userMode = "summaryOutput") {
-  decimals <- ifelse(phenotypeThreshold < 1, 1, 0) * abs(log(phenotypeThreshold, 10))
+  decimals <-
+    ifelse(phenotypeThreshold < 1, 1, 0) * abs(log(phenotypeThreshold, 10))
   if (is.null(object) ||
     !is.null(object$messages)) {
     message0("~> The input object is missing or a failure object.")
@@ -19,23 +20,26 @@ classificationTag <- function(object = NULL,
     phenotypeThreshold < 0) {
     stop("~> `phenotypeThreshold` must be a single value in [0,1] interval.")
   }
+  message0('classificationTag is an extension to openStats specifically designed for the International Mouse Phenotyping Consortium (IMPC).')
   ######################
   debug <- FALSE
   ChangeClassification <- NA
   OpenStatListObj <- object$input$OpenStatsList
-  tbl <- apply(
-    table(
-      OpenStatListObj@datasetUNF[, OpenStatListObj@dataset.colname.sex],
-      OpenStatListObj@datasetUNF[, OpenStatListObj@dataset.colname.genotype]
-    ),
-    1,
-    prod
-  )
+  tbl <-
+    apply(
+      table(
+        OpenStatListObj@datasetUNF[, OpenStatListObj@dataset.colname.sex],
+        OpenStatListObj@datasetUNF[, OpenStatListObj@dataset.colname.genotype]
+      ),
+      1,
+      prod
+    )
   csex <- asFactorAndSelectVariable(
     OpenStatListObj@datasetUNF,
     OpenStatListObj@dataset.colname.sex
   )
-  SexInTheCleanedInputModel <- "Sex" %in% all_vars0(object$extra$Cleanedformula)
+  SexInTheCleanedInputModel <-
+    "Sex" %in% all_vars0(object$extra$Cleanedformula)
   if (!SexInTheCleanedInputModel) {
     csex <- NULL
   }
@@ -67,7 +71,8 @@ classificationTag <- function(object = NULL,
     )
     ##########################
     if (userMode == "summaryOutput") {
-      if (length(v$`Genotype p-value`) < 1) {
+      if (length(v$`Genotype p-value`) < 1 &&
+        length(SexInteraction) < 1) {
         ChangeClassification <- NA
       } else if (v$`Genotype p-value` > phenotypeThreshold &&
         ifelse(length(SexInteraction) > 0,
@@ -78,16 +83,39 @@ classificationTag <- function(object = NULL,
           ChangeClassification <- paste0(
             "With phenotype threshold value ",
             phenotypeThreshold,
-            " - no significant change for the one sex (",
+            " - no significant change for one sex (",
             lsex,
             ") tested"
           )
         } else {
-          ChangeClassification <- paste(
-            "With phenotype threshold value",
-            phenotypeThreshold,
-            "- no significant change"
-          )
+          if (NullOrValue(v$`Sex FvKO p-value`) < phenotypeThreshold &&
+            NullOrValue(v$`Sex MvKO p-value`) < phenotypeThreshold) {
+            ChangeClassification <- paste(
+              "With phenotype threshold value",
+              phenotypeThreshold,
+              "- Significant for both sex"
+            )
+          } else if (NullOrValue(v$`Sex FvKO p-value`) < phenotypeThreshold &&
+            NullOrValue(v$`Sex MvKO p-value`) > phenotypeThreshold) {
+            ChangeClassification <- paste(
+              "With phenotype threshold value",
+              phenotypeThreshold,
+              "- Significant for females only"
+            )
+          } else if (NullOrValue(v$`Sex FvKO p-value`) > phenotypeThreshold &&
+            NullOrValue(v$`Sex MvKO p-value`) < phenotypeThreshold) {
+            ChangeClassification <- paste(
+              "With phenotype threshold value",
+              phenotypeThreshold,
+              "- Significant for males only"
+            )
+          } else {
+            ChangeClassification <- paste(
+              "With phenotype threshold value",
+              phenotypeThreshold,
+              "- no significant change"
+            )
+          }
         }
       } else {
         if (length(SexInteraction) < 1) {
@@ -101,6 +129,7 @@ classificationTag <- function(object = NULL,
                 ") tested"
               )
           } else if (nsex == 2) {
+            ### MALEs/FEMALES
             ChangeClassification <- paste(
               "With phenotype threshold value",
               phenotypeThreshold,
@@ -115,125 +144,423 @@ classificationTag <- function(object = NULL,
           }
         } else if (v$`Sex FvKO p-value` >= SexSpecificThreshold &&
           v$`Sex MvKO p-value` >= SexSpecificThreshold) {
-          ChangeClassification <- paste0(
-            "With phenotype threshold value ",
-            phenotypeThreshold,
-            " - cannot classify effect [",
-            "Interaction pvalue = ",
-            FormatPvalueClassificationTag(SexInteraction, decimals = decimals),
-            ", Genotype Female pvalue = ",
-            FormatPvalueClassificationTag(v$`Sex FvKO p-value`, decimals = decimals),
-            ", Genotype Male pvalue = ",
-            FormatPvalueClassificationTag(v$`Sex MvKO p-value`, decimals = decimals),
-            "]"
-          )
+          if (NullOrValue(v$`Genotype p-value`) < phenotypeThreshold) {
+            ChangeClassification <- paste0(
+              "Overally significant [level = ",
+              phenotypeThreshold,
+              ", pvalue = ",
+              NullOrValue(v$`Genotype p-value`, ReplaveValue = "- it is null -"),
+              "] but cannot classify gender effect [",
+              "Interaction pvalue = ",
+              FormatPvalueClassificationTag(SexInteraction, decimals = decimals),
+              ", Genotype Female pvalue = ",
+              FormatPvalueClassificationTag(v$`Sex FvKO p-value`, decimals = decimals),
+              ", Genotype Male pvalue = ",
+              FormatPvalueClassificationTag(v$`Sex MvKO p-value`, decimals = decimals),
+              "]"
+            )
+          } else {
+            ChangeClassification <- paste0(
+              "Overally insignificant [level = ",
+              phenotypeThreshold,
+              ", pvalue = ",
+              NullOrValue(v$`Genotype p-value`, ReplaveValue = "- it is null -"),
+              "] and cannot classify gender effect [",
+              "Interaction pvalue = ",
+              FormatPvalueClassificationTag(SexInteraction, decimals = decimals),
+              ", Genotype Female pvalue = ",
+              FormatPvalueClassificationTag(v$`Sex FvKO p-value`, decimals = decimals),
+              ", Genotype Male pvalue = ",
+              FormatPvalueClassificationTag(v$`Sex MvKO p-value`, decimals = decimals),
+              "]"
+            )
+          }
         } else if (v$`Sex FvKO p-value` < SexSpecificThreshold &&
           v$`Sex MvKO p-value` >= SexSpecificThreshold) {
-          ChangeClassification <- paste(
-            "With phenotype threshold value",
-            phenotypeThreshold,
-            "- females only"
-          )
+          if (NullOrValue(v$`Genotype p-value`) < phenotypeThreshold) {
+            ChangeClassification <- paste(
+              "Overally significant [level = ",
+              phenotypeThreshold,
+              ", pvalue = ",
+              NullOrValue(v$`Genotype p-value`, ReplaveValue = "- it is null -"),
+              "]; and with phenotype threshold value",
+              phenotypeThreshold,
+              "- females only"
+            )
+          } else {
+            ChangeClassification <- paste(
+              "Overally insignificant [level = ",
+              phenotypeThreshold,
+              ", pvalue = ",
+              NullOrValue(v$`Genotype p-value`, ReplaveValue = "- it is null -"),
+              "]; but with phenotype threshold value",
+              phenotypeThreshold,
+              "- females only"
+            )
+          }
         } else if (v$`Sex FvKO p-value` >= SexSpecificThreshold &&
           v$`Sex MvKO p-value` < SexSpecificThreshold) {
-          ChangeClassification <- paste(
-            "With phenotype threshold value",
-            phenotypeThreshold,
-            "- males only"
-          )
+          if (NullOrValue(v$`Genotype p-value`) < phenotypeThreshold) {
+            ChangeClassification <- paste(
+              "Overally significant [level = ",
+              phenotypeThreshold,
+              ", pvalue = ",
+              NullOrValue(v$`Genotype p-value`, ReplaveValue = "- it is null -"),
+              "]; and with phenotype threshold value",
+              phenotypeThreshold,
+              "- males only"
+            )
+          } else {
+            ChangeClassification <- paste(
+              "Overally insignificant [level = ",
+              phenotypeThreshold,
+              ", pvalue = ",
+              NullOrValue(v$`Genotype p-value`, ReplaveValue = "- it is null -"),
+              "]; but with phenotype threshold value",
+              phenotypeThreshold,
+              "- males only"
+            )
+          }
         } else if (as.list(v$`Sex FvKO estimate`)$Value > 0 &&
           as.list(v$`Sex MvKO estimate`)$Value > 0 ||
           as.list(v$`Sex FvKO estimate`)$Value < 0 &&
             as.list(v$`Sex MvKO estimate`)$Value < 0) {
           if (abs(as.list(v$`Sex FvKO estimate`)$Value) > abs(as.list(v$`Sex MvKO estimate`)$Value)) {
-            ChangeClassification <-
-              paste(
-                "With phenotype threshold value",
+            if (NullOrValue(v$`Genotype p-value`) < phenotypeThreshold) {
+              ChangeClassification <- paste(
+                "Overally significant [level = ",
+                phenotypeThreshold,
+                ", pvalue = ",
+                NullOrValue(v$`Genotype p-value`, ReplaveValue = "- it is null -"),
+                "]; and with phenotype threshold value",
                 phenotypeThreshold,
                 "- different size as females greater"
               )
+            } else {
+              ChangeClassification <- paste(
+                "Overally insignificant [level = ",
+                phenotypeThreshold,
+                ", pvalue = ",
+                NullOrValue(v$`Genotype p-value`, ReplaveValue = "- it is null -"),
+                "]; but with phenotype threshold value",
+                phenotypeThreshold,
+                "- different size as females greater"
+              )
+            }
           } else {
-            ChangeClassification <- paste(
-              "With phenotype threshold value",
-              phenotypeThreshold,
-              "- different size as males greater"
-            )
+            if (NullOrValue(v$`Genotype p-value`) < phenotypeThreshold) {
+              ChangeClassification <- paste(
+                "Overally significant [level = ",
+                phenotypeThreshold,
+                ", pvalue = ",
+                NullOrValue(v$`Genotype p-value`, ReplaveValue = "- it is null -"),
+                "]; and with phenotype threshold value",
+                phenotypeThreshold,
+                "- different size as males greater"
+              )
+            } else {
+              ChangeClassification <- paste(
+                "Overally insignificant [level = ",
+                phenotypeThreshold,
+                ", pvalue = ",
+                NullOrValue(v$`Genotype p-value`, ReplaveValue = "- it is null -"),
+                "]; but with phenotype threshold value",
+                phenotypeThreshold,
+                "- different size as males greater"
+              )
+            }
           }
         } else {
-          ChangeClassification <- paste(
-            "With phenotype threshold value",
-            phenotypeThreshold,
-            "- different direction for the sexes"
-          )
+          if (NullOrValue(v$`Genotype p-value`) < phenotypeThreshold) {
+            ChangeClassification <- paste(
+              "Overally significant [level = ",
+              phenotypeThreshold,
+              ", pvalue = ",
+              NullOrValue(v$`Genotype p-value`, ReplaveValue = "- it is null -"),
+              "]; and with phenotype threshold value",
+              phenotypeThreshold,
+              "- different direction for the sexes"
+            )
+          } else {
+            ChangeClassification <- paste(
+              "Overally insignificant [level = ",
+              phenotypeThreshold,
+              ", pvalue = ",
+              NullOrValue(v$`Genotype p-value`, ReplaveValue = "- it is null -"),
+              "]; but with phenotype threshold value",
+              phenotypeThreshold,
+              "- different direction for the sexes"
+            )
+          }
         }
       }
     } else {
       if (length(SexInteraction) < 1) {
         if (nsex == 1) {
-          ChangeClassification <-
-            paste0(
-              "If phenotype is significant it is for the one sex (",
-              lsex,
-              ") tested"
-            )
+          if (NullOrValue(v$`Genotype p-value`) < phenotypeThreshold) {
+            ChangeClassification <-
+              paste0(
+                "Overall phenotype is significant [level = ",
+                phenotypeThreshold,
+                ", pvalue = ",
+                NullOrValue(v$`Genotype p-value`, ReplaveValue = "- it is null -"),
+                "] and it is for the one sex (",
+                lsex,
+                ") tested"
+              )
+          } else {
+            ChangeClassification <-
+              paste0(
+                "Overall phenotype is insignificant [level = ",
+                phenotypeThreshold,
+                ", pvalue = ",
+                NullOrValue(v$`Genotype p-value`, ReplaveValue = "- it is null -"),
+                "] and it is for the one sex (",
+                lsex,
+                ") tested"
+              )
+          }
         } else if (nsex == 2) {
-          ChangeClassification <-
-            paste("If phenotype is significant - both sexes equally")
+          if (NullOrValue(v$`Genotype p-value`) < phenotypeThreshold) {
+            ChangeClassification <-
+              paste0(
+                "Overall phenotype is significant [level = ",
+                phenotypeThreshold,
+                ", pvalue = ",
+                NullOrValue(v$`Genotype p-value`, ReplaveValue = "- it is null -"),
+                "] and both sexes equally"
+              )
+          } else {
+            ChangeClassification <-
+              paste0(
+                "Overall phenotype is insignificant [level = ",
+                phenotypeThreshold,
+                ", pvalue = ",
+                NullOrValue(v$`Genotype p-value`, ReplaveValue = "- it is null -"),
+                " ] both sexes equally"
+              )
+          }
         } else {
-          ChangeClassification <-
-            paste("If phenotype is significant - regardless of gender")
+          if (NullOrValue(v$`Genotype p-value`) < phenotypeThreshold) {
+            ChangeClassification <-
+              paste0(
+                "Overall phenotype is significant [level = ",
+                phenotypeThreshold,
+                ", pvalue = ",
+                NullOrValue(v$`Genotype p-value`, ReplaveValue = "- it is null -"),
+                " ] regardless of gender"
+              )
+          } else {
+            ChangeClassification <-
+              paste0(
+                "Overall phenotype is insignificant [level = ",
+                phenotypeThreshold,
+                ", pvalue = ",
+                NullOrValue(v$`Genotype p-value`, ReplaveValue = "- it is null -"),
+                " ] regardless of gender"
+              )
+          }
         }
       } else
       if (v$`Sex FvKO p-value` >= SexSpecificThreshold &&
         v$`Sex MvKO p-value` >= SexSpecificThreshold) {
-        ChangeClassification <-
-          paste0(
-            "If phenotype is significant ",
-            "- cannot classify effect [",
-            "Interaction pvalue = ",
-            FormatPvalueClassificationTag(SexInteraction, decimals = decimals),
-            ", Genotype Female pvalue = ",
-            FormatPvalueClassificationTag(v$`Sex FvKO p-value`, decimals = decimals),
-            ", Genotype Male pvalue = ",
-            FormatPvalueClassificationTag(v$`Sex MvKO p-value`, decimals = decimals),
-            "]"
-          )
+        if (NullOrValue(v$`Genotype p-value`) < phenotypeThreshold) {
+          ChangeClassification <-
+            paste0(
+              "Overally significant [level = ",
+              phenotypeThreshold,
+              ", pvalue = ",
+              NullOrValue(v$`Genotype p-value`, ReplaveValue = "- it is null -"),
+              "] and cannot classify effect [",
+              "Interaction pvalue = ",
+              FormatPvalueClassificationTag(SexInteraction, decimals = decimals),
+              ", Genotype Female pvalue = ",
+              FormatPvalueClassificationTag(v$`Sex FvKO p-value`, decimals = decimals),
+              ", Genotype Male pvalue = ",
+              FormatPvalueClassificationTag(v$`Sex MvKO p-value`, decimals = decimals),
+              "]"
+            )
+        } else {
+          ChangeClassification <-
+            paste0(
+              "Overally insignificant [level = ",
+              phenotypeThreshold,
+              ", pvalue = ",
+              NullOrValue(v$`Genotype p-value`, ReplaveValue = "- it is null -"),
+              "] and cannot classify effect [",
+              "Interaction pvalue = ",
+              FormatPvalueClassificationTag(SexInteraction, decimals = decimals),
+              ", Genotype Female pvalue = ",
+              FormatPvalueClassificationTag(v$`Sex FvKO p-value`, decimals = decimals),
+              ", Genotype Male pvalue = ",
+              FormatPvalueClassificationTag(v$`Sex MvKO p-value`, decimals = decimals),
+              "]"
+            )
+        }
       } else if (v$`Sex FvKO p-value` < SexSpecificThreshold &&
         v$`Sex MvKO p-value` >= SexSpecificThreshold) {
-        ChangeClassification <-
-          paste("If phenotype is significant - females only")
+        if (NullOrValue(v$`Genotype p-value`) < phenotypeThreshold) {
+          ChangeClassification <-
+            paste0(
+              "Overally significant [level = ",
+              phenotypeThreshold,
+              ", pvalue = ",
+              NullOrValue(v$`Genotype p-value`, ReplaveValue = "- it is null -"),
+              "] - females only"
+            )
+        } else {
+          ChangeClassification <-
+            paste0(
+              "Overally insignificant [level = ",
+              phenotypeThreshold,
+              ", pvalue = ",
+              NullOrValue(v$`Genotype p-value`, ReplaveValue = "- it is null -"),
+              "] - females only"
+            )
+        }
       } else if (v$`Sex FvKO p-value` >= SexSpecificThreshold &&
         v$`Sex MvKO p-value` < SexSpecificThreshold) {
-        ChangeClassification <-
-          paste("If phenotype is significant - males only")
+        if (NullOrValue(v$`Genotype p-value`) < phenotypeThreshold) {
+          ChangeClassification <-
+            paste0(
+              "Overally significant [level = ",
+              phenotypeThreshold,
+              ", pvalue = ",
+              NullOrValue(v$`Genotype p-value`, ReplaveValue = "- it is null -"),
+              "] - males only"
+            )
+        } else {
+          ChangeClassification <-
+            paste0(
+              "Overally insignificant [level = ",
+              phenotypeThreshold,
+              ", pvalue = ",
+              NullOrValue(v$`Genotype p-value`, ReplaveValue = "- it is null -"),
+              "] - males only"
+            )
+        }
       } else
       if (as.list(v$`Sex FvKO estimate`)$Value > 0 &&
         as.list(v$`Sex MvKO estimate`)$Value > 0 ||
         as.list(v$`Sex FvKO estimate`)$Value < 0 &&
           as.list(v$`Sex MvKO estimate`)$Value < 0) {
         if (abs(as.list(v$`Sex FvKO estimate`)$Value) > abs(as.list(v$`Sex MvKO estimate`)$Value)) {
-          ChangeClassification <-
-            paste("If phenotype is significant - different size as females greater")
+          if (NullOrValue(v$`Genotype p-value`) < phenotypeThreshold) {
+            ChangeClassification <-
+              paste0(
+                "Overally significant [level = ",
+                phenotypeThreshold,
+                ", pvalue = ",
+                NullOrValue(v$`Genotype p-value`, ReplaveValue = "- it is null -"),
+                "] - different size as females greater"
+              )
+          } else {
+            ChangeClassification <-
+              paste0(
+                "Overally insignificant [level = ",
+                phenotypeThreshold,
+                ", pvalue = ",
+                NullOrValue(v$`Genotype p-value`, ReplaveValue = "- it is null -"),
+                "] - different size as females greater"
+              )
+          }
         } else {
-          ChangeClassification <-
-            paste("If phenotype is significant - different size as males greater")
+          if (NullOrValue(v$`Genotype p-value`) < phenotypeThreshold) {
+            ChangeClassification <-
+              paste0(
+                "Overally significant [level = ",
+                phenotypeThreshold,
+                ", pvalue = ",
+                NullOrValue(v$`Genotype p-value`, ReplaveValue = "- it is null -"),
+                "] - different size as males greater"
+              )
+          } else {
+            ChangeClassification <-
+              paste0(
+                "Overally insignificant [level = ",
+                phenotypeThreshold,
+                ", pvalue = ",
+                NullOrValue(v$`Genotype p-value`, ReplaveValue = "- it is null -"),
+                "] - different size as males greater"
+              )
+          }
         }
       } else {
-        ChangeClassification <-
-          paste("If phenotype is significant - different direction for the sexes")
+        if (NullOrValue(v$`Genotype p-value`) < phenotypeThreshold) {
+          ChangeClassification <-
+            paste0(
+              "Overally significant [level = ",
+              phenotypeThreshold,
+              ", pvalue = ",
+              NullOrValue(v$`Genotype p-value`, ReplaveValue = "- it is null -"),
+              "] - different direction for the sexes"
+            )
+        } else {
+          ChangeClassification <-
+            paste0(
+              "Overally insignificant [level = ",
+              phenotypeThreshold,
+              ", pvalue = ",
+              NullOrValue(v$`Genotype p-value`, ReplaveValue = "- it is null -"),
+              "] - different direction for the sexes"
+            )
+        }
       }
     }
   } else if (object$input$method == "FE") {
     if (userMode == "summaryOutput") {
-      all_p.value <- NullOrValue(v$`Genotype contribution`$`Overall`$`Complete table`$p.value)
-      female_p.value <- NullOrValue(v$`Genotype contribution`$`Sex FvKO p-value`$`Complete table`$p.value)
-      male_p.value <- NullOrValue(v$`Genotype contribution`$`Sex MvKO p-value`$`Complete table`$p.value)
+      all_p.value <-
+        NullOrValue(v$`Genotype contribution`$`Overall`$`Complete table`$p.value)
+      female_p.value <-
+        NullOrValue(v$`Genotype contribution`$`Sex FvKO p-value`$`Complete table`$p.value)
+      male_p.value <-
+        NullOrValue(v$`Genotype contribution`$`Sex MvKO p-value`$`Complete table`$p.value)
 
       if (nsex == 1) {
-        ChangeClassification <-
-          paste0("Not significant for the one sex (", lsex, ") tested")
+        if (all_p.value < phenotypeThreshold) {
+          ChangeClassification <-
+            paste0(
+              "Overally significant [level = ",
+              phenotypeThreshold,
+              ", pvalue = ",
+              all_p.value,
+              "] and not significant for the only sex (",
+              lsex,
+              ") tested"
+            )
+        } else {
+          ChangeClassification <-
+            paste0(
+              "Overally insignificant [level = ",
+              phenotypeThreshold,
+              ", pvalue = ",
+              all_p.value,
+              "] and not significant for the only sex (",
+              lsex,
+              ") tested"
+            )
+        }
       } else {
         ChangeClassification <- paste("Not significant")
+        if (all_p.value < phenotypeThreshold) {
+          ChangeClassification <-
+            paste0(
+              "Significant [level = ",
+              phenotypeThreshold,
+              ", pvalue = ",
+              all_p.value,
+              "] "
+            )
+        } else {
+          ChangeClassification <-
+            paste0(
+              "Not significant [level = ",
+              phenotypeThreshold,
+              ", pvalue = ",
+              all_p.value,
+              "] "
+            )
+        }
       }
 
       # Tag
@@ -337,12 +664,18 @@ classificationTag <- function(object = NULL,
       female_p.value <- 10
       direction_males <- NA
       male_p.value <- 10
-      high_male_p.value <- NullOrValue(v$`Genotype contribution`$`Sex MvKO p-value`$High$p.value)
-      high_female_p.value <- NullOrValue(v$`Genotype contribution`$`Sex FvKO p-value`$High$p.value)
-      high_all_p.value <- NullOrValue(v$`Genotype contribution`$`Overall`$High$p.value)
-      low_male_p.value <- NullOrValue(v$`Genotype contribution`$`Sex MvKO p-value`$Low$p.value)
-      low_female_p.value <- NullOrValue(v$`Genotype contribution`$`Sex FvKO p-value`$Low$p.value)
-      low_all_p.value <- NullOrValue(v$`Genotype contribution`$Overall$Low$p.value)
+      high_male_p.value <-
+        NullOrValue(v$`Genotype contribution`$`Sex MvKO p-value`$High$p.value)
+      high_female_p.value <-
+        NullOrValue(v$`Genotype contribution`$`Sex FvKO p-value`$High$p.value)
+      high_all_p.value <-
+        NullOrValue(v$`Genotype contribution`$`Overall`$High$p.value)
+      low_male_p.value <-
+        NullOrValue(v$`Genotype contribution`$`Sex MvKO p-value`$Low$p.value)
+      low_female_p.value <-
+        NullOrValue(v$`Genotype contribution`$`Sex FvKO p-value`$Low$p.value)
+      low_all_p.value <-
+        NullOrValue(v$`Genotype contribution`$Overall$Low$p.value)
 
 
       # High classification p-val is less than threshold and low classification p-val is more that threshold
