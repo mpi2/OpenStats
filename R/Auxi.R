@@ -4517,8 +4517,7 @@ extractFisherSubTableResults1 <- function(x, what = "p.value") {
   return(r)
 }
 ReFurtherModels = function(x = NULL) {
-  if (is.null(x) ||
-      is.null(x$output$SplitModels))
+  if (is.null(x))
     return(NULL)
   r = setNames(lapply0(x, function(v) {
     lapply1(
