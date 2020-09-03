@@ -20,7 +20,7 @@ classificationTag <- function(object = NULL,
     phenotypeThreshold < 0) {
     stop("~> `phenotypeThreshold` must be a single value in [0,1] interval.")
   }
-  message0('classificationTag is an extension to openStats specifically designed for the International Mouse Phenotyping Consortium (IMPC).')
+  message0("classificationTag is an extension to openStats specifically designed for the International Mouse Phenotyping Consortium (IMPC).")
   ######################
   debug <- FALSE
   ChangeClassification <- NA
@@ -74,7 +74,8 @@ classificationTag <- function(object = NULL,
       if (length(v$`Genotype p-value`) < 1 &&
         length(SexInteraction) < 1) {
         ChangeClassification <- NA
-      } else if (v$`Genotype p-value` > phenotypeThreshold &&
+      } else if (length(v$`Genotype p-value`) > 0 &&
+        v$`Genotype p-value` > phenotypeThreshold &&
         ifelse(length(SexInteraction) > 0,
           SexInteraction > phenotypeThreshold,
           TRUE
