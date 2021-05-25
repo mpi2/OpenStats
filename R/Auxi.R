@@ -484,6 +484,41 @@ FormulaContainsFunction <- function(formula) {
   return(r)
 }
 
+dist1 = function(x) {
+  d <-
+    tryCatch(
+      expr = outer(x, x, "-"),
+      error = function(e) {
+        message0(
+          "\t\tError(s) in the (distance calculation - dist1 function) for the effect size estimation. See: "
+        )
+        message0("\t\t", e, breakLine = FALSE)
+        return(NULL)
+      },
+      warning = function(w) {
+        message0(
+          "\t\tWarning(s) in the (distance calculation - dist1 function for the effect size estimation. See: "
+        )
+        message0("\t\t", w, breakLine = FALSE)
+        return(NULL)
+      }
+    )
+  
+  if (is.null(d)) {
+    return(NULL)
+  }
+  ###
+  d[upper.tri(d, diag = TRUE)] <- NA
+  
+  if (all(is.na(d))) {
+    return(NULL)
+  }
+  minmax = c(max(d, na.rm = TRUE), min(d, na.rm = TRUE))
+  maxVal = minmax[which.max(abs(minmax))]
+  
+  return(head(maxVal, 1))
+}
+
 percentageChangeCont <- function(model,
                                  data,
                                  variable,
@@ -762,11 +797,7 @@ eff.size <- function(object,
       )
     } else {
       # For categorical covariates it is the mean difference
-      MDiff <- max(dist(agr[, depVariable, drop = FALSE],
-        method = "maximum"
-      ),
-      na.rm = TRUE
-      )
+      MDiff <- dist1(agr[, depVariable, drop = FALSE])
       r <- resid(NModel)
       sd <- sd0(r, na.rm = TRUE)
       efSi <- list(
