@@ -487,7 +487,7 @@ FormulaContainsFunction <- function(formula) {
 dist1 = function(x) {
   d <-
     tryCatch(
-      expr = outer(x, x, "-"),
+      expr = outer(unlist(x), unlist(x), "-"),
       error = function(e) {
         message0(
           "\t\tError(s) in the (distance calculation - dist1 function) for the effect size estimation. See: "
@@ -802,10 +802,10 @@ eff.size <- function(object,
       sd <- sd0(r, na.rm = TRUE)
       efSi <- list(
         "Value" = ifelse(!is.na(sd) &&
-          sd > 0, abs(MDiff) / sd, NA),
+          sd > 0 && !is.null(MDiff), MDiff / sd, NA),
         "Variable" = effOfInd,
         "Model" = printformula(formula(NModel)),
-        "Type" = "Mean differences",
+        "Type" = "Mean differences. Formula = (mu_treatment - mu_control)/sd(residuals)",
         "Percentage change" = PerChange
       )
     }
