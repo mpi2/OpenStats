@@ -1443,7 +1443,7 @@ checkTableForFisherTest <- function(xtb,
 fisher.test0 <- function(x, formula, ci_levels, ...) {
   r <- tryCatch(
     do.call(fisher.test, listFun(
-      list = list(x = x, ...),
+      list = list(x = x, workspace = 2e8, ...), 
       FUN = fisher.test
     )),
     error = function(e) {
