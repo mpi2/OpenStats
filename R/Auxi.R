@@ -3477,7 +3477,7 @@ normality.test0 <- function(x, message = FALSE, ...) {
       )
     } else {
       #################### Kolmogorov-Smirnov
-      precision <- 4 + decimalplaces(x = min(x, na.rm = TRUE))
+      precision <- 3 + decimalplaces(x = min(x, na.rm = TRUE))
       r <- list(
         "P-value" = ks.test(
           x = jitter(
