@@ -1970,16 +1970,19 @@ dataSignature <- function(formula = '.', data, digits = 10) {
           "]"
         )
       } else {
-        paste0(
-          name,
-          ":[",
-          pasteComma(
-            paste0(levels(d), "=", table(d)),
-            truncate           = FALSE,
-            trailingSpace      = FALSE
-          ),
-          "]"
-        )
+        if (length(d) > 0 &&
+            all(is.na(d)))
+          d = rep('AllNa', length(d))
+        d = as.factor(d)
+        paste0(name,
+               ":[",
+               pasteComma(
+                 paste0(levels(d), "=", table(d)),
+                 truncate           = FALSE,
+                 trailingSpace      = FALSE
+               ),
+               "]")
+        
       }
     })
 
@@ -1997,7 +2000,8 @@ dataSignature <- function(formula = '.', data, digits = 10) {
     res <- pasteComma(
       sort(unlist(res0), decreasing = FALSE),
       truncate      = FALSE,
-      trailingSpace = FALSE
+      trailingSpace = FALSE,
+      sep = '|'
     )
   } else {
     res <- paste0(
