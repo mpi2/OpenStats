@@ -52,6 +52,22 @@ ML2REML <- function(x, debug = FALSE) {
   return(x)
 }
 
+ks.test0 <- function (x, ...) {
+	r <- tryCatch(
+		expr = ks.test(x,...),
+		error = function(e) {
+			message0("\t\tCannot perform ks.test(). See: ")
+			message0("\t\t", e, breakLine = FALSE)
+			return(NULL)
+		},
+		warning = function(w) {
+			message0("\t\tCannot perform ks,test(). See: ")
+			message0("\t\t", w, breakLine = FALSE)
+			return(NULL)
+		}
+	)
+}
+
 REML2ML <- function(x, debug = FALSE) {
   if (!is.null(x) &&
     is(x, c("lme", "gls"))) {
@@ -3482,27 +3498,33 @@ normality.test0 <- function(x, message = FALSE, ...) {
     } else {
       #################### Kolmogorov-Smirnov
       precision <- 3 + decimalplaces(x = min(x, na.rm = TRUE))
+      ksresult <- ks.test0(
+      	x = jitter(
+      		x = x,
+      		amount = precision
+      	),
+      	y = "pnorm",
+      	alternative = "two.sided",
+      	...
+      )$p.value
       r <- list(
-        "P-value" = ks.test(
-          x = jitter(
-            x = x,
-            amount = precision
-          ),
-          y = "pnorm",
-          alternative = "two.sided",
-          ...
-        )$p.value,
-        "Unique N" = length(unique(na.omit(x))),
-        "N" = length(x),
-        "Unique N/N percent" = UniqueRatio(x),
-        "Mean" = mean0(x),
-        "SD" = sd01(x),
-        "Test" = "Kolmogorov-Smirnov",
-        "Note" = paste0(
-          "Small jitter (precision = ",
-          precision,
-          " decimals) added to possible ties (duplicates)."
-        )
+      	"P-value" = ksresult,
+      	"Unique N" = length(unique(na.omit(x))),
+      	"N" = length(x),
+      	"Unique N/N percent" = UniqueRatio(x),
+      	"Mean" = mean0(x),
+      	"SD" = sd01(x),
+      	"Test" = "Kolmogorov-Smirnov",
+      	"Note" = paste0(
+      		ifelse(
+      			is.null(ksresult),
+      			'Cannot calculate ks.test() even with small',
+      			'Small'
+      		),
+      		" jitter (precision = ",
+      		precision,
+      		" decimals) added to possible ties (duplicates)."
+      	)
       )
     }
   } else {
