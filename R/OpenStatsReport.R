@@ -20,7 +20,7 @@ OpenStatsReport <- function(object,
     expr = {
       out <- NULL
       suppressMessagesANDWarnings(
-        if (is(
+        if (is0(
           object,
           "OpenStatsMM"
         )) {
@@ -28,9 +28,9 @@ OpenStatsReport <- function(object,
             object = object,
             debug = debug
           )
-        } else if (is(object, "OpenStatsFE")) {
+        } else if (is0(object, "OpenStatsFE")) {
           out <- OpenStatsReportCat(object = object)
-        } else if (is(object, "OpenStatsRR")) {
+        } else if (is0(object, "OpenStatsRR")) {
           out <- OpenStatsReportRR(object = object)
         } else {
           if (RemoveNullKeys) {

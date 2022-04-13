@@ -105,8 +105,8 @@ OpenStatsAnalysis0 <- function(OpenStatsListObject = NULL,
   if (is.null(OpenStatsListObject)) {
     stop("\n ~> The input dataset cannot be NULL")
   }
-  if (!is(OpenStatsListObject, "PhenList") &&
-    !is(OpenStatsListObject, "OpenStatsList")) {
+  if (!is0(OpenStatsListObject, "PhenList") &&
+    !is0(OpenStatsListObject, "OpenStatsList")) {
     stop('\n ~> function expects "PhenList" or "OpenStatsList" object \n')
   }
   if (noVariation(data = OpenStatsListObject@datasetPL)) {

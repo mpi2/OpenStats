@@ -31,7 +31,7 @@ asFactorAndSelectVariable <- function(x = NULL, col = NULL) {
 
 ML2REML <- function(x, debug = FALSE) {
   if (!is.null(x) &&
-    is(x, c("lme", "gls"))) {
+      is0(x, c("lme", "gls"))) {
     if (debug) {
       message0("\tRecovering the REML object from ML ...")
     }
@@ -68,9 +68,22 @@ ks.test0 <- function (x, ...) {
 	)
 }
 
+is0 = function(obj = NULL, class2 = NULL) {
+  r = FALSE
+  if (is.null(obj) ||
+      is.null(class2) ||
+      length(class2) < 1)
+    return (r)
+
+  for (cl2 in class2) {
+    r = r || is(obj, cl2)
+  }
+  return(r)
+}
+
 REML2ML <- function(x, debug = FALSE) {
   if (!is.null(x) &&
-    is(x, c("lme", "gls"))) {
+      is0(x, c("lme", "gls"))) {
     if (debug) {
       message0("\tCoverting REML object to ML ...")
     }
@@ -98,11 +111,11 @@ Matrix2List <- function(x, ...) {
     return(NULL)
   }
 
-  if (length(x) == 1 || is(x, "numeric")) {
+  if (length(x) == 1 || is0(x, "numeric")) {
     return(as.list(x))
   }
 
-  if (!is(x, "matrix")) {
+  if (!is0(x, "matrix")) {
     x <- as.matrix(x)
   }
   r <- as.list(unmatrix0(x, ...))
@@ -519,19 +532,19 @@ dist1 = function(x) {
         return(NULL)
       }
     )
-  
+
   if (is.null(d)) {
     return(NULL)
   }
   ###
   d[upper.tri(d, diag = TRUE)] <- NA
-  
+
   if (all(is.na(d))) {
     return(NULL)
   }
   minmax = c(max(d, na.rm = TRUE), min(d, na.rm = TRUE))
   maxVal = minmax[which.max(abs(minmax))]
-  
+
   return(head(maxVal, 1))
 }
 
@@ -1459,7 +1472,7 @@ checkTableForFisherTest <- function(xtb,
 fisher.test0 <- function(x, formula, ci_levels, ...) {
   r <- tryCatch(
     do.call(fisher.test, listFun(
-      list = list(x = x, workspace = 2e8, ...), 
+      list = list(x = x, workspace = 2e8, ...),
       FUN = fisher.test
     )),
     error = function(e) {
@@ -1961,9 +1974,9 @@ FormulaDataColNames <- function(formula = NULL, data = NULL) {
 }
 
 dataSignature <- function(formula = '.', data, digits = 10) {
-  
+
   a.vars <- FormulaDataColNames(formula = formula, data = data)
-  
+
   if (!is.null(formula) &&
     !is.null(data) &&
     !is.null(a.vars) &&
@@ -1998,7 +2011,7 @@ dataSignature <- function(formula = '.', data, digits = 10) {
                  trailingSpace      = FALSE
                ),
                "]")
-        
+
       }
     })
 
@@ -2832,9 +2845,9 @@ intervalsCon <- function(object, lvls, ...) {
     " ..."
   )
   ci <- lapply(lvls, function(x) {
-    citerms <- if (is(object, "lme")) {
+    citerms <- if (is0(object, "lme")) {
       c("all", "fixed", "var-cov")
-    } else if (is(object, "gls")) {
+    } else if (is0(object, "gls")) {
       c("all", "coef", "var-cov")
     } else {
       c("all")
@@ -4342,7 +4355,7 @@ USerManualSlotName <- function(x, name = "OpenStats") {
   if (length(xn) < 1) {
     return(NULL)
   }
-  
+
   for (i in seq_along(xn)) {
     cat("    ", i, ". ", xn[i], "  \n")
   }
@@ -4533,7 +4546,7 @@ digit2Scientific <- function(x, digit = 3) {
 
 sortDataFrame <- function(x = NULL) {
   if (is.null(x) ||
-      !is(x, c("data.frame", "matrix"))) {
+      !is0(x, c("data.frame", "matrix"))) {
     return(NULL)
   } else {
     return(x[, order(colnames(x)), drop = FALSE])
@@ -4556,7 +4569,7 @@ FeFurtherModels = function(x = NULL) {
   }),
   nm = names(x$output$SplitModels))
   return(r)
-} 
+}
 
 lapply1 <- function(X, FUN, ...) {
   r <- lapply0(X = X, FUN = FUN, ...)
