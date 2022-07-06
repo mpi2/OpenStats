@@ -9,3 +9,7 @@ Changes in version 0.0.1:
 -    Reference range plus framework
 + Fully optimized and scalable
 + Robust and reliable to be running on high-throughput phenotypic pipelines
+
+Changes in version 1.1.8:
++ Several minor bugs fixed and improvements
++ Fixed compatitibility with the R 4.2+
