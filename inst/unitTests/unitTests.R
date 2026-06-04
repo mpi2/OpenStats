@@ -1,5 +1,6 @@
 # testing OpenStats
-# Author: Hamed Haseli Mashhadi <hamedhm@ebi.ac.uk>
+# Author: Hamed Haseli Mashhadi
+# Maintainer: Marina Kan <marinak@ebi.ac.uk>
 ##########################################################################
 ################### General Testing ######################################
 

@@ -132,9 +132,6 @@ Other parameters that can be passed to:\cr
 \details{
 OpenStatsReport function can be used to extract the key elements of the analysis from the OpenStatsMM/FE/RR objects. The output from OpenStatsReport has schemed that makes it easy to be populated to the downstream processes such as storing and accessing results from a database.
 }
-\author{
-  Hamed Haseli Mashhadi <hamedhm@ebi.ac.uk>
-}
 \seealso{
   \code{\link{OpenStatsList}}\code{\link{OpenStatsComplementarySplit}}, \code{\link{plot.OpenStatsMM}},\code{\link{plot.OpenStatsFE}},\code{\link{plot.OpenStatsRR}}, \code{\link{summary.OpenStatsMM}}, \code{\link{summary.OpenStatsFE}},\code{\link{summary.OpenStatsRR}}, \code{\link{print.OpenStatsMM}}, \code{\link{print.OpenStatsFE}}, \code{\link{print.OpenStatsRR}}
 }

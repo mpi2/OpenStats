@@ -39,9 +39,6 @@ The output consists of a pair of values separated by comma, e.g. 1,1, for low an
 - If bodyweight existed in the data, bodyweight p-value\cr
 }
 
-\author{
-	Hamed Haseli Mashhadi <hamedhm@ebi.ac.uk>
-}
 
 \seealso{
 	\code{\link{OpenStatsAnalysis}}, 	\code{\link{summary.OpenStatsFE}}, 	\code{\link{summary.OpenStatsMM}}

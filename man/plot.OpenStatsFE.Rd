@@ -35,9 +35,6 @@ The plot function creates some visualisations for the Fisher's exact test framew
 - Mosaic plot of the Sex versus Genotype (if they exist in the data)\cr
 }
 
-\author{
-  Hamed Haseli Mashhadi <hamedhm@ebi.ac.uk>
-}
 
 \seealso{
 \code{\link{OpenStatsAnalysis}}, \code{\link{plot.OpenStatsRR}}, \code{\link{plot.OpenStatsMM}}

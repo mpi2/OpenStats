@@ -38,9 +38,6 @@ The output consists of the following statistics for levels of partitioning varia
 - If bodyweight existed in the data, bodyweight p-value\cr
 }
 
-\author{
-	Hamed Haseli Mashhadi <hamedhm@ebi.ac.uk>
-}
 
 \seealso{
 	\code{\link{OpenStatsComplementarySplit}}, \code{\link{OpenStatsAnalysis}},	\code{\link{plot.OpenStatsComplementarySplit}}, \code{\link{print.OpenStatsComplementarySplit}}

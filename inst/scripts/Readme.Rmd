@@ -1,6 +1,12 @@
 ---
 title: "Accessing data from the International Mouse Phenotyping Consortium (IMPC) using application programming interface (API) endpoint"
-author: "Hamed Haseli Mashhadi <hamedhm@ebi.ac.uk><br /> Source: <https://www.mousephenotype.org/>"
+author:
+  - name: "Hamed Haseli Mashhadi"
+    role: "Author"
+  - name: "Marina Kan"
+    email: "marinak@ebi.ac.uk"
+    role: "Maintainer"
+    url: "https://www.mousephenotype.org/"
 date: "`r format(Sys.time(), '%d %B %Y')`"
 output: 
   html_document:

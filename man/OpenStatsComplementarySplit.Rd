@@ -28,9 +28,6 @@ OpenStatsComplementarySplit(
   List of splits and the analysis outputs. The splits contain the name of the partitioning levels (for example Female or Female.Age_15_weeks), and an `OpenStatsAnalysis` object including the input data, outputs etc. See the examples for a general view of the output object.
 }
 
-\author{
-Hamed Haseli Mashhadi <hamedhm@ebi.ac.uk>
-}
 
 
 \seealso{

@@ -47,9 +47,6 @@ OpenStatsReport(
 OpenStatsReport function can be used to extract the key elements of the analysis from the OpenStatsMM/FE/RR objects (the output from OpenStatsAnalysis function). The output from OpenStatsReport has schemed that makes it easy to be populated to the downstream processes such as storing and accessing results from a database.
 }
 
-\author{
-	Hamed Haseli Mashhadi <hamedhm@ebi.ac.uk>
-}
 
 \seealso{
 	\code{\link{OpenStatsAnalysis}}

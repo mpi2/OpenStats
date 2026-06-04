@@ -28,9 +28,6 @@ The plot function produces two sets of plots for:\cr
 
 \value{List of two plot objects, Continuous and Categorical}
 
-\author{
-	Hamed Haseli Mashhadi <hamedhm@ebi.ac.uk>
-}
 
 \seealso{
 	\code{\link{OpenStatsList}}

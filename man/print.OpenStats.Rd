@@ -27,9 +27,6 @@ Print summary table for an OpenStatsList object
 Tabe of summary statistics
 }
 
-\author{
-	Hamed Haseli Mashhadi <hamedhm@ebi.ac.uk>
-}
 
 \seealso{
 	\code{\link{OpenStatsList}}, \code{\link{summary.OpenStatsList}}, \code{\link{OpenStatsAnalysis}}

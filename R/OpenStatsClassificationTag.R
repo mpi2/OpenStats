@@ -41,7 +41,7 @@ classificationTag <- function(object = NULL,
   SexInTheCleanedInputModel <-
     "Sex" %in% all_vars0(object$extra$Cleanedformula)
   if (!SexInTheCleanedInputModel) {
-    csex <- 1
+    csex <- NULL
   }
   nsex <- sum(tbl > 0) * !is.null(csex) # nlevels(csex)
   lsex <- names(tbl)[tbl > 0] # pasteComma(levels(csex))

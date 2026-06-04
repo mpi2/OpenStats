@@ -39,9 +39,6 @@ The output consists of the following statistics:
 - If bodyweight existed in the data, bodyweight p-value\cr
 }
 
-\author{
-	Hamed Haseli Mashhadi <hamedhm@ebi.ac.uk>
-}
 
 \seealso{
 	\code{\link{OpenStatsAnalysis}}, 	\code{\link{summary.OpenStatsMM}}, 	\code{\link{summary.OpenStatsRR}}

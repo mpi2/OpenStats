@@ -95,9 +95,6 @@ an instance of the OpenStatsList class. The S4 object contains:\cr
 3. the inputarguments to the `OpenStatsList` function\cr
 }
 
-\author{
-Hamed Haseli Mashhadi <hamedhm@ebi.ac.uk>
-}
 \seealso{
 	\code{\link{OpenStatsAnalysis}},\code{\link{plot.OpenStatsList}},\code{\link{summary.OpenStatsList}}, \code{\link{summary.OpenStatsList}},
 }

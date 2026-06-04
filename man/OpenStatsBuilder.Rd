@@ -35,9 +35,6 @@ OpenStatsListBuilder(
  Provided DOE and DOB are not NULL, a `OpenStatsList` object that is quite similar to `PhenList` object with an extra column called `LifeStage` with two levels `Early` and `Late`. Otherwise, the output is similar to the input `PhenList` object.
 }
 
-\author{
-  Hamed Haseli Mashhadi <hamedhm@ebi.ac.uk>
-}
 
 \seealso{
   \code{\link{OpenStatsAnalysis}}, \code{\link{OpenStatsList}}

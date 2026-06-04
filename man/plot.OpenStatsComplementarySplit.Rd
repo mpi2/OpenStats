@@ -35,9 +35,6 @@ The plot function creates some visualisations for the split results from the lin
 \value{
 Not applicable
 }
-\author{
-  Hamed Haseli Mashhadi <hamedhm@ebi.ac.uk>
-}
 
 \seealso{
 \code{\link{OpenStatsComplementarySplit}}, \code{\link{print.OpenStatsComplementarySplit}}, \code{\link{summary.OpenStatsComplementarySplit}}

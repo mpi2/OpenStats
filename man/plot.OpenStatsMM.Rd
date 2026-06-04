@@ -37,9 +37,6 @@ The plot function creates some visualisations for the linear mixed model framewo
 - The density plot of the response variable and the normality test p-value\cr
 }
 
-\author{
-  Hamed Haseli Mashhadi <hamedhm@ebi.ac.uk>
-}
 
 \seealso{
 \code{\link{OpenStatsAnalysis}}, \code{\link{plot.OpenStatsFE}}, \code{\link{plot.OpenStatsRR}}

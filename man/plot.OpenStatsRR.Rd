@@ -35,10 +35,6 @@ The plot function creates some visualisations for the reference range plus frame
 - Mosaic plot of the Sex versus Genotype (if they exist in the data)\cr
 }
 
-\author{
-  Hamed Haseli Mashhadi <hamedhm@ebi.ac.uk>
-}
-
 \seealso{
 \code{\link{OpenStatsAnalysis}}, \code{\link{plot.OpenStatsFE}}, \code{\link{plot.OpenStatsMM}}
 }
