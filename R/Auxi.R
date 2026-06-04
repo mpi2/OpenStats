@@ -663,25 +663,24 @@ optimM <- function(optimise) {
 }
 
 applyFormulaToData <- function(formula = NULL, data, add = FALSE) {
-  if (is.null(formula) || is.null(all_vars0(formula))) {
+  nms <- all_vars0(formula)
+  if (is.null(formula) || is.null(nms)) {
     return(data)
   }
   if (is.null(data)) {
     return(NULL)
   }
-  nms <-
-    trimws(scan(
-      text = paste(unlist(as.list(
-        attr(terms(as.formula(formula)), "variables")
-      ))[-1], sep = "+", collapse = " + "),
-      what = "",
-      sep = "+",
-      quiet = TRUE
-    ))
-
-  m <- sapply(nms, function(x) {
-    eval(parse(text = x), data)
-  })
+  missing <- setdiff(nms, names(data))
+  if (length(missing)) {
+    message0(
+      "Some terms in the model are not included in the data. See: \n\t  ",
+      pasteComma(missing, replaceNull = FALSE, truncate = FALSE),
+      "\n\t Initial  model: ",
+      printformula(formula)
+    )
+    stop("Model terms are not all present in the data")
+  }
+  m <- data[, nms, drop = FALSE]
   if (!is.null(m) && add) {
     m <- cbind(data, m)
   }
