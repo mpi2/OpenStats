@@ -1,0 +1,24 @@
+variables:
+  DS_ENFORCE_NEW_ANALYZER: 'true'
+  GITLAB_ADVANCED_SAST_ENABLED: 'true'
+
+include:
+  - template: Jobs/SAST.gitlab-ci.yml
+  - template: Jobs/Secret-Detection.gitlab-ci.yml
+  - template: Jobs/Dependency-Scanning.gitlab-ci.yml
+
+sast:
+  stage: test
+  artifacts:
+    name: sast
+    paths:
+      - gl-sast-report.json
+    reports:
+      sast: gl-sast-report.json
+    when: always
+
+secret_detection:
+  stage: test
+
+stages:
+  - test
